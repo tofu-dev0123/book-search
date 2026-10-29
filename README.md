@@ -42,5 +42,6 @@ Elasticsearch が `127.0.0.1:9200` で起動する。疎通確認と停止の手
 | ADR | 決定 |
 |---|---|
 | [001](docs/adr/001-language.md) | 実装言語に Python / FastAPI を採用する（UI は TypeScript） |
-
-データソース・検索エンジン・日本語の分割方式の ADR は [#8](https://github.com/tofu-dev0123/book-search/issues/8) で追加する。
+| [002](docs/adr/002-data-source.md) | 書籍データに openBD を使う |
+| [003](docs/adr/003-search-engine.md) | 検索エンジンに Elasticsearch 9.5 を使う（RRF はアプリ側で計算する） |
+| [004](docs/adr/004-japanese-tokenization.md) | 日本語の分割に bigram を使う |
