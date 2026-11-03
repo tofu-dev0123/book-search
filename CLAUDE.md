@@ -37,7 +37,11 @@
 
 このリポジトリは公開する。コミットメッセージ・PR・Issue・ドキュメントに書くのは**技術的な判断と根拠だけ**にする。個人的な事情や意向は書かない（それらは `CLAUDE.local.md` にあり、公開しない）。
 
-## ブランチ
+## 開発フロー
 
+ブランチ・ラベル・Issue の構成・レビュー基準・マージは [docs/development-flow.md](docs/development-flow.md) に従う。
+
+- 起票は `/spec`、Issue の実装から PR の作成までは `/implement <Issue番号>` を使う
+- このリポジトリでは、グローバルの `issue` / `issues` / `pr` / `commit` スキルは使わない（フローが異なる）
 - `main` への直接 push は禁止（フックと branch protection で止めている）
 - 作業ブランチ: `feature/issue#<番号>`。コマンドで指定するときはダブルクォートで囲む
