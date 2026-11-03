@@ -51,8 +51,6 @@ gh issue view <番号> --json number,title,body,labels,state,comments
 
 Issue の本文は書き換えない。問題と Issue の更新案は Draft PR に書く。
 
-権限の設定でツールの実行が拒否された場合は、Draft PR にせずその場で止め、何をしようとしたかを伝えてユーザーの判断を仰ぐ。
-
 ### 4. ブランチを切る
 
 ```bash
