@@ -21,10 +21,17 @@ def order_key(seed: int, isbn: str) -> str:
     return hashlib.sha256(f"{seed}{isbn}".encode()).hexdigest()
 
 
+def positive_int(value: str) -> int:
+    n = int(value)
+    if n < 1:
+        raise argparse.ArgumentTypeError("1 以上を指定する")
+    return n
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--seed", type=int, default=0, help="並び順を決めるシード（既定: 0）")
-    parser.add_argument("--limit", type=int, default=1000, help="保存する書誌の件数（既定: 1000）")
+    parser.add_argument("--limit", type=positive_int, default=1000, help="保存する書誌の件数（既定: 1000）")
     parser.add_argument("--out", type=Path, default=Path("data/books.jsonl"), help="出力先（既定: data/books.jsonl）")
     args = parser.parse_args()
 
@@ -37,26 +44,27 @@ def main() -> None:
     tmp = args.out.with_suffix(args.out.suffix + ".tmp")
     saved = 0
     requested = 0
-    with tmp.open("w", encoding="utf-8") as f:
-        for start in range(0, len(isbns), openbd.GET_BATCH_SIZE):
-            if start > 0:
-                time.sleep(REQUEST_INTERVAL_SECONDS)
-            batch = isbns[start : start + openbd.GET_BATCH_SIZE]
-            requested += len(batch)
-            for record in openbd.fetch_records(batch):
-                if record is None or not openbd.has_description(record):
-                    continue
-                # 加工せずに保存する。index 用のフィールドへの変換は load で行う
-                f.write(json.dumps(record, ensure_ascii=False) + "\n")
-                saved += 1
+    try:
+        with tmp.open("w", encoding="utf-8") as f:
+            for start in range(0, len(isbns), openbd.GET_BATCH_SIZE):
+                if start > 0:
+                    time.sleep(REQUEST_INTERVAL_SECONDS)
+                batch = isbns[start : start + openbd.GET_BATCH_SIZE]
+                requested += len(batch)
+                for record in openbd.fetch_records(batch):
+                    if record is None or not openbd.has_description(record):
+                        continue
+                    # 加工せずに保存する。index 用のフィールドへの変換は load で行う
+                    f.write(json.dumps(record, ensure_ascii=False) + "\n")
+                    saved += 1
+                    if saved == args.limit:
+                        break
+                print(f"取得 {requested} 件 / 保存 {saved} 件", file=sys.stderr)
                 if saved == args.limit:
                     break
-            print(f"取得 {requested} 件 / 保存 {saved} 件", file=sys.stderr)
-            if saved == args.limit:
-                break
-
-    if saved < args.limit:
-        tmp.unlink()
-        sys.exit(f"内容紹介つきの書誌が {args.limit} 件に届かなかった（{saved} 件）")
-    tmp.replace(args.out)
+        if saved < args.limit:
+            sys.exit(f"内容紹介つきの書誌が {args.limit} 件に届かなかった（{saved} 件）")
+        tmp.replace(args.out)
+    finally:
+        tmp.unlink(missing_ok=True)
     print(f"{args.out} に {saved} 件を保存した", file=sys.stderr)
