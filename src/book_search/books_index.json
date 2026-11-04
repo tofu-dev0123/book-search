@@ -1,0 +1,30 @@
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0,
+    "analysis": {
+      "filter": {
+        "english_stop": { "type": "stop", "stopwords": "_english_" }
+      },
+      "analyzer": {
+        "ja_bigram": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": ["cjk_width", "lowercase", "cjk_bigram", "english_stop"]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "dynamic": "strict",
+    "properties": {
+      "isbn": { "type": "keyword" },
+      "title": { "type": "text", "analyzer": "ja_bigram" },
+      "author": { "type": "text", "analyzer": "ja_bigram" },
+      "publisher": { "type": "text", "analyzer": "ja_bigram" },
+      "description": { "type": "text", "analyzer": "ja_bigram" },
+      "pubdate": { "type": "keyword" },
+      "cover": { "type": "keyword", "index": false }
+    }
+  }
+}
