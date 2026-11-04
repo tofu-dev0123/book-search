@@ -9,6 +9,7 @@ dependencies = [
 
 [project.scripts]
 fetch = "book_search.fetch:main"
+load = "book_search.load:main"
 
 [build-system]
 requires = ["uv_build>=0.13.7,<0.14.0"]
