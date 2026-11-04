@@ -87,7 +87,7 @@ uv run load
 
 `books に 1000 件を投入した` が出る。
 
-- 毎回 index `books` を削除して作り直してから投入する。index の定義は `src/book_search/books_index.json`
+- 毎回 index `books` を削除して作り直してから投入する。index の定義は `src/book_search/ingest/books_index.json`
 - `_id` は ISBN。再実行しても件数は増えない
 - 接続先は環境変数 `ES_URL` で変えられる（既定: `http://localhost:9200`）
 - オプション: `--input`（既定: `data/books.jsonl`）、`--index`（既定: `books`）
@@ -107,7 +107,7 @@ curl -s 'localhost:9200/books/_search?pretty' \
 ### 起動
 
 ```bash
-uv run uvicorn book_search.api:app --reload
+uv run uvicorn book_search.api.app:app --reload
 ```
 
 - `localhost:8000` で待ち受ける。`--reload` はコードの変更を検知して再起動する
@@ -142,9 +142,9 @@ URL に日本語をそのまま書くと（`'localhost:8000/search?q=歴史'`）
 
 ```python
 from elasticsearch import Elasticsearch
-from book_search.search import search
+from book_search.search import query
 
-search(Elasticsearch("http://localhost:9200"), "歴史", size=3, from_=0)
+query.search(Elasticsearch("http://localhost:9200"), "歴史", size=3, from_=0)
 ```
 
 ## 停止
