@@ -1,0 +1,16 @@
+[project]
+name = "book-search"
+version = "0.1.0"
+description = "書籍検索 API と、検索の投入・評価のコマンド"
+requires-python = ">=3.13"
+dependencies = [
+    "elasticsearch>=9,<10",
+]
+
+[project.scripts]
+fetch = "book_search.fetch:main"
+load = "book_search.load:main"
+
+[build-system]
+requires = ["uv_build>=0.13.7,<0.14.0"]
+build-backend = "uv_build"

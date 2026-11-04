@@ -58,6 +58,50 @@ curl -s 'localhost:9200/smoke-test/_search?pretty' \
 curl -s -X DELETE 'localhost:9200/smoke-test'
 ```
 
+## 書誌の投入
+
+openBD から内容紹介つきの書誌を取得し、index `books` に投入する。取得（`fetch`）と投入（`load`）は別のコマンドで、index の設定を変えたときは `load` だけをやり直せばよい。
+
+### 前提
+
+- [uv](https://docs.astral.sh/uv/)（`brew install uv` または公式のインストーラ）。Python 3.13 は uv が `.python-version` を見て自動で入れる
+- Elasticsearch が起動している（上の「起動」）
+
+### 取得する
+
+```bash
+uv run fetch
+```
+
+- openBD から内容紹介（TextType 03、なければ 02）が 50 文字以上ある書誌を 1,000 件取り、`data/books.jsonl` に保存する。数十秒かかる
+- 書誌は `sha256(シード + ISBN)` の小さい順に取る。シードが同じなら、openBD の収録件数が多少増減しても、ほぼ同じ書誌の集合になる
+- レコードは openBD の JSON を加工せずに1行1件で保存する
+- `data/` は git の管理外。openBD のデータはリポジトリに含めない（[ADR-002](adr/002-data-source.md)）
+- オプション: `--seed`（既定: 0）、`--limit`（既定: 1000）、`--out`（既定: `data/books.jsonl`）
+
+### 投入する
+
+```bash
+uv run load
+```
+
+`books に 1000 件を投入した` が出る。
+
+- 毎回 index `books` を削除して作り直してから投入する。index の定義は `src/book_search/books_index.json`
+- `_id` は ISBN。再実行しても件数は増えない
+- 接続先は環境変数 `ES_URL` で変えられる（既定: `http://localhost:9200`）
+- オプション: `--input`（既定: `data/books.jsonl`）、`--index`（既定: `books`）
+
+### 検索する
+
+```bash
+curl -s 'localhost:9200/books/_search?pretty' \
+  -H 'Content-Type: application/json' \
+  -d '{"query": {"match": {"description": "歴史"}}, "_source": ["isbn", "title"]}'
+```
+
+`hits.total.value` が 1 以上で、内容紹介に「歴史」を含む書誌が返る。1,000 件は人文・社会科学の学術書に寄るため、技術書のクエリ（`機械学習` など）はヒットしないことがある。
+
 ## 停止
 
 ```bash
