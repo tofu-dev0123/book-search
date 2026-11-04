@@ -5,6 +5,8 @@ description = "書籍検索 API と、検索の投入・評価のコマンド"
 requires-python = ">=3.13"
 dependencies = [
     "elasticsearch>=9,<10",
+    "fastapi>=0.162.0",
+    "uvicorn>=0.54.0",
 ]
 
 [project.scripts]
