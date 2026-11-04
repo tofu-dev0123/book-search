@@ -7,6 +7,7 @@ from typing import Annotated
 from elasticsearch import ConnectionError, ConnectionTimeout, Elasticsearch, NotFoundError
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
 
 from book_search import search as book_search
 
@@ -16,6 +17,13 @@ MAX_RESULT_WINDOW = 10000
 logger = logging.getLogger(__name__)
 client = Elasticsearch(os.environ.get("ES_URL", "http://localhost:9200"))
 app = FastAPI()
+
+# UI は別オリジンから叩く。許可するオリジンはカンマ区切りで指定し、既定は開発用のローカルのみ
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=os.environ.get("CORS_ORIGINS", "http://localhost:3000").split(","),
+    allow_methods=["GET"],
+)
 
 
 def unavailable(e: Exception) -> HTTPException:
