@@ -6,3 +6,10 @@ CLAUDE.local.md
 .env
 .env.*
 !.env.example
+
+# Python
+.venv/
+__pycache__/
+
+# openBD から取得したデータ（ADR-002: リポジトリに含めない）
+data/
