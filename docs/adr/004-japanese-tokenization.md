@@ -46,6 +46,18 @@
 ## 結果
 
 - 段階1 の索引は、bigram による分割で作る。Elasticsearch に標準で組み込まれている `ngram` tokenizer / `cjk_bigram` filter で実現できる
+- 実現方式は **`cjk_bigram` filter を採る**（#11）。入力 `Real World HTTP 歴史とコードに学ぶ` を `_analyze` で比べた結果は次のとおり
+
+  ```
+  指定なし（standard）  real | world | http | 歴 | 史 | と | コード | に | 学 | ぶ
+  cjk_bigram            real | world | http | 歴史 | 史と | とコ | コー | ード | ドに | に学 | 学ぶ
+  ngram(min=2,max=2)    Re | ea | al | l␣ | ␣W | Wo | or | rl | ld | d␣ | ␣H | HT | TT | TP | P␣ | ␣歴 | 歴史 | ...
+  ```
+
+  - `standard` のままでは漢字とひらがなが1文字ずつに割れ、`機械学習` が「機・械・学・習 のいずれかを含む文書」に当たる
+  - `ngram` は英字も2文字刻みになり、空白まで索引語に入る。書誌のタイトルの 14% は日本語を含まないため、実害になる
+  - `cjk_bigram` は CJK だけを2文字化し、英字は単語のまま残す
+- analyzer は組み込みの `cjk` と同じ構成（`standard` tokenizer + `cjk_width` / `lowercase` / `cjk_bigram` / 英語ストップワード）を、settings に `ja_bigram` として明示して持つ。英語ストップワードを落とすという判断を既定値に委ねないため、および kuromoji と比べる際に差分を読めるようにするため
 - kuromoji と比較する際は、`analysis-kuromoji` プラグインを導入したイメージを用意する（[ADR-003](003-search-engine.md)）。プラグインのバージョンは ES 本体と一致させる必要がある
 - 1文字のクエリはそのままではヒットしない。評価セットに 1文字のクエリを含める場合は、その結果を把握したうえで扱う
 - 評価セットができた後、「bigram 単独」と「bigram + kuromoji のマルチフィールド」を同じ評価セットで比べ、nDCG@10 の差を記録する
