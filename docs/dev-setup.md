@@ -102,6 +102,51 @@ curl -s 'localhost:9200/books/_search?pretty' \
 
 `hits.total.value` が 1 以上で、内容紹介に「歴史」を含む書誌が返る。1,000 件は人文・社会科学の学術書に寄るため、技術書のクエリ（`機械学習` など）はヒットしないことがある。
 
+## 検索 API
+
+### 起動
+
+```bash
+uv run uvicorn book_search.api:app --reload
+```
+
+- `localhost:8000` で待ち受ける。`--reload` はコードの変更を検知して再起動する
+- 前提: Elasticsearch が起動していて、`books` に書誌を投入済み（上の「書誌の投入」）
+- 環境変数:
+  - `ES_URL`: Elasticsearch の接続先（既定: `http://localhost:9200`）
+  - `CORS_ORIGINS`: UI のオリジン。カンマ区切りで複数指定できる（既定: `http://localhost:3000`）
+
+### 確認
+
+```bash
+curl -s 'localhost:8000/healthz'
+```
+
+`{"status":"ok"}` が返る。Elasticsearch に繋がらないとき、または `books` がないときは 503。
+
+```bash
+curl -s -G 'localhost:8000/search' --data-urlencode 'q=歴史' -d size=3 | python3 -m json.tool
+```
+
+`total`・`took_ms`・`hits`（各書誌と `score`）が返る。
+
+URL に日本語をそのまま書くと（`'localhost:8000/search?q=歴史'`）、uvicorn は `Invalid HTTP request` として 400 を返す。`--data-urlencode` でエンコードして渡す。
+
+- パラメータ: `q`（必須。空や空白だけは 422）、`size`（1〜100、既定 20）、`from`（0 以上、既定 0。`from + size` は 10000 以下）
+- 範囲外の値は 422。Elasticsearch に繋がらないとき、または `books` がないときは 503
+- API の仕様は `localhost:8000/docs` でも見られる
+
+### Python から検索する
+
+検索ロジックは API に依存しない関数で、評価スクリプトなどから直接呼べる。
+
+```python
+from elasticsearch import Elasticsearch
+from book_search.search import search
+
+search(Elasticsearch("http://localhost:9200"), "歴史", size=3, from_=0)
+```
+
 ## 停止
 
 ```bash
