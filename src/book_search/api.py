@@ -21,7 +21,7 @@ app = FastAPI()
 # UI は別オリジンから叩く。許可するオリジンはカンマ区切りで指定し、既定は開発用のローカルのみ
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=os.environ.get("CORS_ORIGINS", "http://localhost:3000").split(","),
+    allow_origins=[o.strip() for o in os.environ.get("CORS_ORIGINS", "http://localhost:3000").split(",") if o.strip()],
     allow_methods=["GET"],
 )
 
