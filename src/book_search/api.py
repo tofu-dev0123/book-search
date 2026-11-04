@@ -52,3 +52,15 @@ def search(
         if e.error == "index_not_found_exception":
             raise unavailable(e) from e
         raise
+
+
+@app.get("/healthz")
+def healthz() -> dict:
+    # ES が応答するだけでなく、index がなければ /search が 503 になるので異常として扱う
+    try:
+        exists = client.indices.exists(index=book_search.INDEX)
+    except (ConnectionError, ConnectionTimeout) as e:
+        raise unavailable(e) from e
+    if not exists:
+        raise HTTPException(status_code=503, detail=f"index {book_search.INDEX} がない")
+    return {"status": "ok"}
