@@ -11,7 +11,7 @@ import sys
 import time
 from pathlib import Path
 
-from book_search import openbd
+from book_search.ingest import openbd
 
 # openBD への負荷を抑えるため、/v1/get のリクエストの間に空ける秒数
 REQUEST_INTERVAL_SECONDS = 1.0
