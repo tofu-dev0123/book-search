@@ -9,7 +9,7 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 
-from book_search import search as book_search
+from book_search.search import query
 
 # ES の index.max_result_window の既定値。from + size がこれを超えると ES がエラーを返す
 MAX_RESULT_WINDOW = 10000
@@ -57,7 +57,7 @@ def search(
 
     # ES に繋がらない、または index がない（未投入・load で作り直し中）ときは、一時的に使えないものとして 503
     try:
-        return book_search.search(client, q, size, from_)
+        return query.search(client, q, size, from_)
     except (ConnectionError, ConnectionTimeout) as e:
         raise unavailable(e) from e
     except NotFoundError as e:
@@ -70,9 +70,9 @@ def search(
 def healthz() -> dict:
     # ES が応答するだけでなく、index がなければ /search が 503 になるので異常として扱う
     try:
-        exists = client.indices.exists(index=book_search.INDEX)
+        exists = client.indices.exists(index=query.INDEX)
     except (ConnectionError, ConnectionTimeout) as e:
         raise unavailable(e) from e
     if not exists:
-        raise HTTPException(status_code=503, detail=f"index {book_search.INDEX} がない")
+        raise HTTPException(status_code=503, detail=f"index {query.INDEX} がない")
     return {"status": "ok"}

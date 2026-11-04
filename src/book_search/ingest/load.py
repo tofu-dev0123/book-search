@@ -14,7 +14,7 @@ from pathlib import Path
 
 from elasticsearch import Elasticsearch, helpers
 
-from book_search import openbd
+from book_search.ingest import openbd
 
 
 def to_document(record: dict) -> dict:
@@ -46,7 +46,7 @@ def main() -> None:
     args = parser.parse_args()
 
     es = Elasticsearch(os.environ.get("ES_URL", "http://localhost:9200"))
-    definition = json.loads(resources.files("book_search").joinpath("books_index.json").read_text())
+    definition = json.loads(resources.files("book_search.ingest").joinpath("books_index.json").read_text())
 
     # 入力の不備で既存の index を空にしないよう、削除の前に全件を読み切る
     documents = list(read_documents(args.input))
