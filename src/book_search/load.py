@@ -48,11 +48,14 @@ def main() -> None:
     es = Elasticsearch(os.environ.get("ES_URL", "http://localhost:9200"))
     definition = json.loads(resources.files("book_search").joinpath("books_index.json").read_text())
 
+    # 入力の不備で既存の index を空にしないよう、削除の前に全件を読み切る
+    documents = list(read_documents(args.input))
+
     es.indices.delete(index=args.index, ignore_unavailable=True)
     es.indices.create(index=args.index, settings=definition["settings"], mappings=definition["mappings"])
 
     # _id に ISBN を使い、同じ書誌を重複させない
-    actions = ({"_index": args.index, "_id": doc["isbn"], "_source": doc} for doc in read_documents(args.input))
+    actions = ({"_index": args.index, "_id": doc["isbn"], "_source": doc} for doc in documents)
     helpers.bulk(es, actions)
     es.indices.refresh(index=args.index)
 
