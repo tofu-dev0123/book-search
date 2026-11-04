@@ -1,5 +1,6 @@
 """検索 API。HTTP の入出力だけを担い、検索は search モジュールに任せる。"""
 
+import logging
 import os
 from typing import Annotated
 
@@ -12,12 +13,15 @@ from book_search import search as book_search
 # ES の index.max_result_window の既定値。from + size がこれを超えると ES がエラーを返す
 MAX_RESULT_WINDOW = 10000
 
+logger = logging.getLogger(__name__)
 client = Elasticsearch(os.environ.get("ES_URL", "http://localhost:9200"))
 app = FastAPI()
 
 
 def unavailable(e: Exception) -> HTTPException:
-    return HTTPException(status_code=503, detail=f"検索を利用できない: {e}")
+    # 例外には ES のホストやポートが含まれるので、応答には出さずにログに残す
+    logger.warning("検索を利用できない", exc_info=e)
+    return HTTPException(status_code=503, detail="検索を一時的に利用できない")
 
 
 @app.get("/search")
