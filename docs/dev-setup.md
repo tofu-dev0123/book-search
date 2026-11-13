@@ -149,26 +149,7 @@ query.search(Elasticsearch("http://localhost:9200"), "歴史", size=3, from_=0)
 
 ## 整形・lint・テスト
 
-### 整形と lint
-
-```bash
-uv run ruff format          # 整形する（確認だけなら --check）
-uv run ruff check           # lint（自動で直せるものは --fix）
-```
-
-- 設定は `pyproject.toml` の `[tool.ruff]`
-- Claude Code が `.py` を編集すると、フック（`.claude/hooks/ruff.sh`）で自動的に整形と `ruff check --fix` が流れる
-
-### テスト
-
-```bash
-uv run pytest               # ES なしで通るテストだけ
-uv run pytest -m es         # ES が要るテストだけ。上の「起動」で ES を起動しておく
-```
-
-- テストは `tests/` に、`src/book_search/` のサブパッケージと同じ構成で置く
-- ES が要るテストには `@pytest.mark.es` を付ける。`books` ではなく専用の index（`test-books`）を使い、終わったら消す
-- `tests/test_dependencies.py` は、サブパッケージ間の依存の向き（`api` は `search` だけに依存する、など）に反する import を検出する
+ruff（整形・lint）と pytest の実行方法、テストの置き場所と方針は [実装ルール](coding-rules.md) にある。
 
 ## 停止
 
