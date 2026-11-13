@@ -6,6 +6,7 @@ Python のコードを書くときのルール。人・Claude Code・レビュ�
 
 | ルール | 手段 |
 |---|---|
+| 本文を Claude に届ける | Claude Code のフック（`.claude/hooks/coding-rules.sh`）。セッションで最初の `.py` の編集を止めて、この文書を返す |
 | format・lint | Claude Code のフック（`.claude/hooks/ruff.sh`） |
 | 依存の向き | `tests/test_dependencies.py` |
 | 実行の漏れ | `/implement` の完了条件の検証で ruff と pytest を必ず流す |
