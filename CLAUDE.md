@@ -41,7 +41,7 @@
 
 ブランチ・ラベル・Issue の構成・レビュー基準・マージは [docs/development-flow.md](docs/development-flow.md) に従う。
 
-コードの配置・依存の向き・テストの方針・禁止事項は [docs/coding-rules.md](docs/coding-rules.md) に従う。Python を編集するときは `.claude/rules/python.md` が読み込む。
+コードの配置・依存の向き・テストの方針・禁止事項は [docs/coding-rules.md](docs/coding-rules.md) に従う。Claude には、セッションで最初に `.py` を編集するときにフックが本文を渡す。
 
 - 起票は `/spec`、Issue の実装から PR の作成までは `/implement <Issue番号>` を使う
 - このリポジトリでは、グローバルの `issue` / `issues` / `pr` / `commit` スキルは使わない（フローが異なる）
