@@ -16,12 +16,14 @@ marker_dir="${TMPDIR:-/tmp}/book-search-coding-rules"
 marker="${marker_dir}/${session}"
 [[ -e "$marker" ]] && exit 0
 
+# 本文を読めなかったときに印だけが残り、以後ルールが渡らなくなるのを避けるため、印は読めてから置く
+rules=$(cat "$project/docs/coding-rules.md")
 mkdir -p "$marker_dir"
 touch "$marker"
 {
   echo "ブロック: このセッションで最初の .py の編集なので、先に実装ルール（docs/coding-rules.md）を返す。"
   echo "ルールに沿って編集をやり直すこと。このセッションでは以後止めない。"
   echo
-  cat "$project/docs/coding-rules.md"
+  echo "$rules"
 } >&2
 exit 2
