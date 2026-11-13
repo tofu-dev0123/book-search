@@ -19,8 +19,8 @@ def build_query(q: str) -> dict:
     return {"multi_match": {"query": q, "fields": SEARCH_FIELDS}}
 
 
-def search(client: Elasticsearch, q: str, size: int, from_: int) -> dict:
-    res = client.search(index=INDEX, query=build_query(q), size=size, from_=from_, source=SOURCE_FIELDS)
+def search(client: Elasticsearch, q: str, size: int, from_: int, index: str = INDEX) -> dict:
+    res = client.search(index=index, query=build_query(q), size=size, from_=from_, source=SOURCE_FIELDS)
     return {
         "total": res["hits"]["total"]["value"],
         "took_ms": res["took"],

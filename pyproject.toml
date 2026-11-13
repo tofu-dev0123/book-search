@@ -16,3 +16,24 @@ load = "book_search.ingest.load:main"
 [build-system]
 requires = ["uv_build>=0.13.7,<0.14.0"]
 build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "httpx2>=2.16.0",
+    "pytest>=9.2.0",
+    "ruff>=0.17.5",
+]
+
+[tool.ruff]
+# 88 だと日本語のコメントで E501 が多く出る。120 なら現行コードが修正なしで通る
+line-length = 120
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.pytest]
+testpaths = ["tests"]
+# ES が要るテストは、ES を起動して `-m es` を指定したときだけ流す
+addopts = ["-m", "not es"]
+markers = ["es: compose の Elasticsearch が要るテスト"]
