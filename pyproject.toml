@@ -19,6 +19,8 @@ build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
+    "httpx>=0.28.1",
+    "pytest>=9.2.0",
     "ruff>=0.17.5",
 ]
 
@@ -29,3 +31,9 @@ target-version = "py313"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
+
+[tool.pytest]
+testpaths = ["tests"]
+# ES が要るテストは、ES を起動して `-m es` を指定したときだけ流す
+addopts = ["-m", "not es"]
+markers = ["es: compose の Elasticsearch が要るテスト"]
