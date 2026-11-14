@@ -4,15 +4,9 @@ import type { Hit } from '../lib/api'
 import { formatPubdate } from '../lib/format'
 import styles from './BookList.module.css'
 
-type Props = {
-  hits: Hit[]
-  // 読み込み中に前の結果を残すときは薄くする
-  dimmed?: boolean
-}
-
-export function BookList({ hits, dimmed = false }: Props) {
+export function BookList({ hits }: { hits: Hit[] }) {
   return (
-    <ol className={`${styles.list} ${dimmed ? styles.dimmed : ''}`}>
+    <ol className={styles.list}>
       {hits.map((hit) => (
         // 行の選択はキーボードでもできるようにする。押したときの動きは詳細画面の Issue で足す
         <li key={hit.isbn} tabIndex={0} className={styles.item}>

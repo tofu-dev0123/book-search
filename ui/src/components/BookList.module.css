@@ -4,11 +4,6 @@
   padding: 0;
   display: grid;
   gap: 20px;
-  transition: opacity 0.2s;
-}
-
-.dimmed {
-  opacity: 0.35;
 }
 
 /* 選択中（ホバー・キーボードのフォーカス）の行には薄い面を敷く。行の位置と文字は動かさない */
@@ -33,7 +28,8 @@
   display: block;
   width: 56px;
   aspect-ratio: 2 / 3;
-  object-fit: cover;
+  /* 書影は切り取らずに枠へ収める（ADR-002: 改変しない） */
+  object-fit: contain;
 }
 
 /* 敷いた面と同じ色にならないよう、細い線で縁取る */
@@ -73,7 +69,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .list,
   .item {
     transition: none;
   }

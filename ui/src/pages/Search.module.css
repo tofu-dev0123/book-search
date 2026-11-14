@@ -29,8 +29,16 @@
   max-width: var(--column);
   margin-inline: auto;
   padding: 20px var(--gutter) 48px;
+}
+
+.results {
   display: grid;
   gap: 28px;
+  transition: opacity 0.2s;
+}
+
+.dimmed {
+  opacity: 0.35;
 }
 
 .summary {
@@ -49,6 +57,12 @@
 
 .error {
   color: var(--warn);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .results {
+    transition: none;
+  }
 }
 
 @media (max-width: 560px) {

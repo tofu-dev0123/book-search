@@ -13,8 +13,11 @@ import styles from './Search.module.css'
 // ローカルの API は数十 ms で返るので、この時間内に返れば読み込み中の表示を出さない（ちらつきを防ぐ）
 const LOADING_DELAY_MS = 200
 
-// どの検索語とページに対する結果かを key で持ち、表示中の URL と比べて読み込み中かを判定する
-type Result = { key: string; response: SearchResponse } | { key: string; failed: true }
+// どの検索語とページに対する結果かを持ち、表示中の URL と比べて読み込み中かを判定する。
+// 読み込み中は前の結果を描き続けるので、件数やページ送りも前の結果の q・page で描く
+type Result = { key: string; q: string; page: number } & (
+  { response: SearchResponse } | { failed: true }
+)
 
 export function Search() {
   const [params, setParams] = useSearchParams()
@@ -32,16 +35,18 @@ export function Search() {
     const timer = setTimeout(() => setDelayedKey(key), LOADING_DELAY_MS)
     search(q, toFrom(page), PAGE_SIZE, controller.signal)
       .then((response) => {
+        clearTimeout(timer)
         // 総件数を超えるページは 1 ページ目に置き換える
         if (response.hits.length === 0 && response.total > 0 && page > 1) {
           setParams({ q }, { replace: true })
           return
         }
-        setResult({ key, response })
+        setResult({ key, q, page, response })
       })
       .catch(() => {
         if (controller.signal.aborted) return
-        setResult({ key, failed: true })
+        clearTimeout(timer)
+        setResult({ key, q, page, failed: true })
       })
     return () => {
       controller.abort()
@@ -73,35 +78,18 @@ export function Search() {
         {showLoading && <LoadingBar />}
       </header>
       <main className={styles.main}>
-        <Body
-          q={q}
-          page={page}
-          result={result}
-          loading={loading}
-          showLoading={showLoading}
-          onMove={move}
-        />
+        {/* 読み込み中は前の結果を残し、200ms を過ぎたら薄くする。初回は何も出さない */}
+        {result && (
+          <div className={`${styles.results} ${showLoading ? styles.dimmed : ''}`}>
+            <Body result={result} onMove={move} />
+          </div>
+        )}
       </main>
     </div>
   )
 }
 
-type BodyProps = {
-  q: string
-  page: number
-  result: Result | null
-  loading: boolean
-  showLoading: boolean
-  onMove: (page: number) => void
-}
-
-function Body({ q, page, result, loading, showLoading, onMove }: BodyProps) {
-  // 読み込み中は、前の結果があれば薄くして残す。初回は何も出さない
-  if (loading) {
-    if (!showLoading || !result || 'failed' in result) return null
-    return <BookList hits={result.response.hits} dimmed />
-  }
-  if (!result) return null
+function Body({ result, onMove }: { result: Result; onMove: (page: number) => void }) {
   // 503・API に繋がらない・その他のエラーは、利用者にとってはどれも「いまは使えない」なので文言を1つにまとめる
   if ('failed' in result) {
     return (
@@ -109,6 +97,7 @@ function Body({ q, page, result, loading, showLoading, onMove }: BodyProps) {
     )
   }
 
+  const { q, page } = result
   const { total, hits } = result.response
   if (total === 0) {
     return (
