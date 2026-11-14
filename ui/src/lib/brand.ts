@@ -1,5 +1,5 @@
-// ブランド名が決まるまでの仮の表記。決まったらここだけを差し替える
-export const BRAND_NAME = 'book-search'
+// 名前だけで、知りたいことから探せる強みを伝える。title・ヘッダー・OGP 画像（brand/build.ts）はここから作る
+export const BRAND_NAME = '知りたいことから探す書籍検索'
 
 export const REPOSITORY_URL = 'https://github.com/tofu-dev0123/book-search'
 
