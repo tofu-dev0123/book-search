@@ -1,0 +1,23 @@
+.pager {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  align-items: center;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+.pager button {
+  font: inherit;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  padding: 0;
+  cursor: pointer;
+}
+
+.pager button:disabled {
+  color: var(--faint);
+  cursor: default;
+}

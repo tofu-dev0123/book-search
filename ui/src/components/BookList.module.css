@@ -1,0 +1,91 @@
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 20px;
+  transition: opacity 0.2s;
+}
+
+.dimmed {
+  opacity: 0.35;
+}
+
+/* 選択中（ホバー・キーボードのフォーカス）の行には薄い面を敷く。行の位置と文字は動かさない */
+.item {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 18px;
+  margin-inline: -12px;
+  padding: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  outline-offset: 2px;
+  transition: background-color 0.2s ease;
+}
+
+.item:hover,
+.item:focus-visible {
+  background: color-mix(in srgb, var(--cover) 40%, transparent);
+}
+
+.cover {
+  display: block;
+  width: 56px;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+}
+
+/* 敷いた面と同じ色にならないよう、細い線で縁取る */
+.blank {
+  background: var(--cover);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.body {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+  align-content: start;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.meta {
+  font-size: 13px;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.description {
+  margin: 0;
+  font-size: 13.5px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .list,
+  .item {
+    transition: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .item {
+    grid-template-columns: 44px 1fr;
+    gap: 14px;
+  }
+
+  .cover {
+    width: 44px;
+  }
+}
