@@ -1,13 +1,13 @@
 # 実装ルール
 
-Python のコードを書くときのルール。人・Claude Code・レビュー（[reviewer](../.claude/agents/reviewer.md) の G1）が同じこの文書を基準にする。
+Python のコードを書くときのルール。人・Claude Code・レビュー（[reviewer](../.claude/agents/reviewer.md) の G1）が同じこの文書を基準にする。UI（`ui/`、TypeScript）のルールは [coding-rules-ui.md](coding-rules-ui.md) にある。
 
 ルールの性質ごとに、守らせる手段を分けている。
 
 | ルール | 手段 |
 |---|---|
-| 本文を Claude に届ける | Claude Code のフック（`.claude/hooks/coding-rules.sh`）。セッションで最初の `.py` の編集を止めて、この文書を返す。Bash で書き換えた場合は、書き換えの後に見直しの指示と一緒に返す（`.claude/hooks/bash-py.sh`） |
-| format・lint | Claude Code のフック（`.claude/hooks/ruff.sh`）。Bash で書き換えた `.py` にも流す（`.claude/hooks/bash-py.sh`） |
+| 本文を Claude に届ける | Claude Code のフック（`.claude/hooks/coding-rules.sh`）。セッションで最初の `.py` の編集を止めて、この文書を返す。Bash で書き換えた場合は、書き換えの後に見直しの指示と一緒に返す（`.claude/hooks/bash-edit.sh`） |
+| format・lint | Claude Code のフック（`.claude/hooks/ruff.sh`）。Bash で書き換えた `.py` にも流す（`.claude/hooks/bash-edit.sh`） |
 | 依存の向き | `tests/test_dependencies.py` |
 | 実行の漏れ | `/implement` の完了条件の検証で ruff と pytest を必ず流す |
 | それ以外（責務の置き場所・命名・テストの方針・禁止事項・コメント） | レビュー（この文書に沿っているか） |

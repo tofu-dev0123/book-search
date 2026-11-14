@@ -183,15 +183,7 @@ npm run dev
 
 ### 整形・lint・テスト・ビルド
 
-`ui/` で実行する。
-
-```bash
-npm run format:check   # 整形の確認（整形するなら npm run format）
-npm run lint           # ESLint
-npm run typecheck      # 型チェック
-npm test               # Vitest（src/lib/ の関数のテスト）
-npm run build          # ui/dist/ にビルドする
-```
+Prettier・ESLint・型チェック・Vitest・ビルドの実行方法と、テストの置き場所と方針は [実装ルール（UI）](coding-rules-ui.md) にある。
 
 ## 整形・lint・テスト
 
