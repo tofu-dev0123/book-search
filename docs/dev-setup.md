@@ -181,6 +181,21 @@ npm run dev
 
 ブラウザで `localhost:3000` を開き、「探しているのは、」に続く空欄に `歴史` と入れて送ると、`/search?q=歴史` に移って検索結果が並ぶ。
 
+### アイコンと OGP 画像の書き出し
+
+アイコンや名前（`BRAND_NAME`）、OGP 画像の文言を変えたときは、`ui/` で次を流し、書き出したファイルをコミットする。
+
+```bash
+npm run brand:build
+```
+
+- 元のファイルは `ui/brand/` にある: アイコンの SVG（`icon.svg`）・OGP 画像の HTML の型（`og-image.html`）・書き出しのスクリプト（`build.ts`）
+- `ui/public/` に `favicon.svg`・`favicon-32.png`・`apple-touch-icon.png`（180px）・`og-image.png`（1200×630）を書き出す
+- PNG は手元の Chrome のヘッドレスモードで描画する。OGP 画像は Google Fonts を読むので、ネットワークに繋がっている必要がある
+- 環境変数:
+  - `CHROME_PATH`: Chrome の実行ファイル（既定: `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`）
+- `npm run build` には含まない。ビルドのたびに作り直さず、書き出したファイルをそのまま使う
+
 ### 整形・lint・テスト・ビルド
 
 Prettier・ESLint・型チェック・Vitest・ビルドの実行方法と、テストの置き場所と方針は [実装ルール（UI）](coding-rules-ui.md) にある。
