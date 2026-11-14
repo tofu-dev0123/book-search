@@ -18,7 +18,8 @@ snapshot_dir="${TMPDIR:-/tmp}/book-search-bash-py"
 [[ -n "$tool_use_id" ]] || exit 0
 
 # git のコマンドだけの呼び出し（git switch・git checkout -- <file> など）は対象にしない。
-# 自分が書いていないファイルに ruff が流れたり、意味の通らない見直しの指示が返ったりするため
+# 自分が書いていないファイルに ruff が流れたり、意味の通らない見直しの指示が返ったりするため。
+# 単独の &（バックグラウンド実行）とコマンド置換の中は区切らないので、git で始まればその中の書き換えは見逃す
 segments=$(jq -r '.tool_input.command // "" | gsub("&&|\\|\\||;|\\|"; "\n")' <<<"$input")
 if ! grep -Evq '^[[:space:]]*(git([[:space:]]|$)|$)' <<<"$segments"; then
   exit 0
