@@ -22,4 +22,39 @@ export default defineConfig([
       globals: globals.browser,
     },
   },
+  // 依存の向き（docs/coding-rules-ui.md）。lib/ を画面から切り離し、画面を描かずにテストできるようにする
+  {
+    files: ['src/components/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            { regex: '(^|/)pages(/|$)', message: 'components/ から pages/ を import しない' },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/lib/**/*.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              regex: '^(react|react-dom|react-router)(/|$)',
+              message: 'lib/ から React を import しない',
+            },
+            {
+              regex: '(^|/)(components|pages)(/|$)',
+              message: 'lib/ から components/・pages/ を import しない',
+            },
+            { regex: '\\.css$', message: 'lib/ から CSS を import しない' },
+          ],
+        },
+      ],
+    },
+  },
 ])
