@@ -1,0 +1,100 @@
+.form {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  min-width: 0;
+}
+
+.label {
+  white-space: nowrap;
+}
+
+.blank {
+  flex: 1 1 360px;
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  border-bottom: 2px solid var(--fg);
+}
+
+.blank:focus-within {
+  border-bottom-color: var(--accent);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  padding: 6px 2px;
+  border: 0;
+  background: transparent;
+  color: var(--fg);
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--faint);
+}
+
+.button {
+  font: inherit;
+  font-size: 14px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  padding: 6px 2px 6px 12px;
+  cursor: pointer;
+}
+
+.button:hover {
+  color: var(--accent);
+}
+
+/* ホームの中央: 文として大きく読ませる。狭い画面では空欄が次の行に折り返す */
+.large {
+  width: min(760px, 100%);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.large .label {
+  font-size: clamp(22px, 4vw, 30px);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+
+.large .input {
+  font-size: clamp(18px, 3vw, 24px);
+}
+
+/* 検索結果のヘッダー */
+.small {
+  flex: 1;
+  gap: 8px;
+}
+
+.small .label {
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.small .blank {
+  flex: 1 1 auto;
+  border-bottom-width: 1.5px;
+}
+
+.small .input {
+  font-size: 17px;
+  padding: 4px 2px;
+}
+
+@media (max-width: 560px) {
+  .small {
+    flex: 1 1 100%;
+    flex-wrap: wrap;
+  }
+
+  .small .blank {
+    flex-basis: 100%;
+  }
+}
