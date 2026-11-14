@@ -3,7 +3,7 @@ import { Link, Navigate, useSearchParams } from 'react-router'
 
 import { BookList } from '../components/BookList'
 import { BrandIcon } from '../components/BrandIcon'
-import { LoadingBar } from '../components/LoadingBar'
+import { LoadingIcon } from '../components/LoadingIcon'
 import { Pager } from '../components/Pager'
 import { QueryForm } from '../components/QueryForm'
 import { search, type SearchResponse } from '../lib/api'
@@ -82,9 +82,9 @@ export function Search() {
           </Link>
           <QueryForm key={q} id="q-search" size="small" defaultValue={q} />
         </div>
-        {showLoading && <LoadingBar />}
       </header>
       <main className={styles.main}>
+        {showLoading && <LoadingIcon />}
         {/* 読み込み中は前の結果を残し、200ms を過ぎたら薄くする。初回は何も出さない */}
         {result && (
           <div className={`${styles.results} ${showLoading ? styles.dimmed : ''}`}>

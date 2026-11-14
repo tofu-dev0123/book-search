@@ -1,0 +1,55 @@
+/* 薄くした前の結果の上に重なるので、背景の色の地を敷いて文字が混ざらないようにする */
+.status {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  z-index: 1;
+  transform: translateX(-50%);
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 16px 28px 12px;
+  border-radius: 12px;
+  background: var(--bg);
+  font-size: 13px;
+  color: var(--fg);
+}
+
+/* 瞳（brand/icon.svg の .pupil）だけを動かす。SVG の要素なので、自分の形の中心を基準に変形させる */
+.status :global(.pupil) {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: look 2.4s ease-in-out infinite;
+}
+
+/* 見回したあとに一度まばたきする。移動の幅は、瞳がレンズの線に重ならない範囲（単位は SVG の 24×24 の座標） */
+@keyframes look {
+  0%,
+  8% {
+    transform: translate(0, 0) scaleY(1);
+  }
+  22%,
+  34% {
+    transform: translate(-3px, 0) scaleY(1);
+  }
+  48%,
+  60% {
+    transform: translate(0.8px, -1.8px) scaleY(1);
+  }
+  70% {
+    transform: translate(0, 0) scaleY(1);
+  }
+  74% {
+    transform: translate(0, 0) scaleY(0.1);
+  }
+  78%,
+  100% {
+    transform: translate(0, 0) scaleY(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .status :global(.pupil) {
+    animation: none;
+  }
+}

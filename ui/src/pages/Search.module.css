@@ -4,7 +4,6 @@
 }
 
 .header {
-  position: relative;
   padding: 16px var(--gutter);
   border-bottom: 1px solid var(--line);
 }
@@ -22,7 +21,9 @@
   color: var(--fg);
 }
 
+/* 読み込み中の表示（LoadingIcon）を、結果の欄の上部中央に重ねる基準にする */
 .main {
+  position: relative;
   max-width: var(--column);
   margin-inline: auto;
   padding: 20px var(--gutter) 48px;
