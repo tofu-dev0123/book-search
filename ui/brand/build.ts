@@ -59,7 +59,8 @@ function screenshot(html: string, width: number, height: number, out: string, wo
       `--screenshot=${join(PUBLIC_DIR, out)}`,
       `file://${page}`,
     ],
-    { stdio: 'ignore' },
+    // Chrome は正常時も stderr にログを出すので表示はせず、失敗したときに例外のメッセージで stderr を返す
+    { stdio: ['ignore', 'ignore', 'pipe'] },
   )
   console.log(`public/${out}`)
 }
