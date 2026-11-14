@@ -35,6 +35,8 @@ curl -s 'localhost:9200/_cluster/health?pretty'
 
 Elasticsearch が `127.0.0.1:9200` で起動する。疎通確認と停止の手順は [docs/dev-setup.md](docs/dev-setup.md) を参照。
 
+書誌を投入したあとは、`make dev` で Elasticsearch・検索 API（`localhost:8000`）・検索 UI（`localhost:3000`）をまとめて起動できる。Ctrl+C で止まるのは API と UI だけで、Elasticsearch は `docker compose down` で止める。前提（uv・Node.js）と書誌の投入は [docs/dev-setup.md](docs/dev-setup.md) を参照。
+
 ## 設計上の判断
 
 判断の根拠と、選ばなかった選択肢を ADR に残している。
