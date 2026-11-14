@@ -1,6 +1,6 @@
 # 実装ルール
 
-Python のコードを書くときのルール。人・Claude Code・レビュー（[reviewer](../.claude/agents/reviewer.md) の G1）が同じこの文書を基準にする。
+Python のコードを書くときのルール。人・Claude Code・レビュー（[reviewer](../.claude/agents/reviewer.md) の G1）が同じこの文書を基準にする。UI（`ui/`、TypeScript）のルールは [coding-rules-ui.md](coding-rules-ui.md) にある。
 
 ルールの性質ごとに、守らせる手段を分けている。
 
