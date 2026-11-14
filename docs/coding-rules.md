@@ -10,7 +10,7 @@ Python のコードを書くときのルール。人・Claude Code・レビュ�
 | format・lint | Claude Code のフック（`.claude/hooks/ruff.sh`）。Bash で書き換えた `.py` にも流す（`.claude/hooks/bash-py.sh`） |
 | 依存の向き | `tests/test_dependencies.py` |
 | 実行の漏れ | `/implement` の完了条件の検証で ruff と pytest を必ず流す |
-| それ以外（責務の置き場所・テストの方針・禁止事項・コメント） | レビュー（この文書に沿っているか） |
+| それ以外（責務の置き場所・命名・テストの方針・禁止事項・コメント） | レビュー（この文書に沿っているか） |
 
 ## 配置
 
@@ -50,6 +50,36 @@ Python のコードを書くときのルール。人・Claude Code・レビュ�
 - コメントは日本語で、コードを読めば分かる「何を」ではなく「なぜ」を書く（ES の制約・採った値の根拠・あとで測ってから変えるもの など）
 - 環境で変わる値（接続先・オリジンなど）は環境変数で受け、ローカルの開発で動く既定値を持つ（`ES_URL` の既定は `http://localhost:9200`）。環境変数を足したら `docs/dev-setup.md` に書く
 - 検索の挙動を変える値（検索対象のフィールド・重み・クエリの型など）は、評価セットで nDCG を測ってから変える
+
+## 命名
+
+現行コードの書き方を規則にしたもの。PEP 8 と重なる部分も書く（ruff の `select` に命名のルール `N` を入れていないため）。ここにない場面（クラス・非公開の名前など）は、必要になったときに足す。
+
+| 対象 | 規則 | 例 |
+|---|---|---|
+| サブパッケージ・モジュール | 責務を表す短い名詞か動詞。組み込みと紛らわしい名前は避ける | `api`・`search`・`ingest`・`evaluation`（`eval` ではない）/ `app`・`query`・`fetch`・`load`・`openbd` |
+| 関数（処理） | 動詞から始める。変換は `to_<変換先>` | `fetch_records`・`read_documents`・`build_query`・`search`・`to_document` |
+| 関数（値・判定） | 値を返すものは名詞。真偽値は `has_`・`is_` | `description`・`order_key`・`has_description` |
+| 例外を作って返す関数 | その状態を表す名前 | `unavailable`（503 の `HTTPException`）・`not_found`（`NotFoundError`） |
+| API のエンドポイントの関数 | パスと同じ名前 | `search`（`/search`）・`healthz`（`/healthz`） |
+| CLI の入り口 | `main` | `ingest/fetch.py`・`ingest/load.py` の `main` |
+| 定数 | 大文字のスネークケース。単位を名前に入れる。ES の設定名・用語に合わせる | `MAX_RESULT_WINDOW`（`index.max_result_window`）・`REQUEST_INTERVAL_SECONDS`・`SOURCE_FIELDS`（`_source`） |
+| モジュールの直下のオブジェクト | クライアント・アプリ・ロガーなど、定数ではないものは小文字 | `client`・`app`・`logger` |
+| 予約語・組み込みと重なる名前 | 末尾に `_` を付ける。API のパラメータ名は `alias` で外向きの名前にする | `from_`（`alias="from"`） |
+| 環境変数 | 大文字のスネークケース | `ES_URL`・`CORS_ORIGINS` |
+| ES の index・CLI | index は小文字とハイフン。CLI は動詞 | `books`・`test-books` / `fetch`・`load` |
+| テスト | `test_<対象>_<条件や結果>`。fixture は渡すものの名前 | `test_blank_query_is_422`・`test_search_returns_matching_books` / `es`・`search_raises` |
+
+### 用語
+
+データの段階ごとに呼び分ける。
+
+| 用語 | 指すもの |
+|---|---|
+| `record` | openBD から取得したレコード（加工前） |
+| `document` | ES に投入する文書（`record` から変換したもの） |
+| `hit` | 検索結果の1件 |
+| `q` | 検索語（API のパラメータ名と同じ） |
 
 ## テスト
 
