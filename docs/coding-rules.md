@@ -10,7 +10,7 @@ Python のコードを書くときのルール。人・Claude Code・レビュ�
 | format・lint | Claude Code のフック（`.claude/hooks/ruff.sh`）。Bash で書き換えた `.py` にも流す（`.claude/hooks/bash-py.sh`） |
 | 依存の向き | `tests/test_dependencies.py` |
 | 実行の漏れ | `/implement` の完了条件の検証で ruff と pytest を必ず流す |
-| それ以外（責務の置き場所・テストの方針・禁止事項・コメント） | レビュー（この文書に沿っているか） |
+| それ以外（責務の置き場所・命名・テストの方針・禁止事項・コメント） | レビュー（この文書に沿っているか） |
 
 ## 配置
 
