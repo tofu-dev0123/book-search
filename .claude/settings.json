@@ -32,7 +32,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/bash-py.sh snapshot"
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/bash-edit.sh snapshot"
           }
         ]
       }
@@ -44,6 +44,10 @@
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/ruff.sh"
+          },
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/prettier-eslint.sh"
           }
         ]
       },
@@ -52,7 +56,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/bash-py.sh check"
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/bash-edit.sh check"
           }
         ]
       }
@@ -63,7 +67,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/bash-py.sh check"
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/bash-edit.sh check"
           }
         ]
       }
