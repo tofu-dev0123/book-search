@@ -192,6 +192,7 @@ npm run brand:build
 - 元のファイルは `ui/brand/` にある: アイコンの SVG（`icon.svg`）・OGP 画像の HTML の型（`og-image.html`）・書き出しのスクリプト（`build.ts`）
 - `ui/public/` に `favicon.svg`・`favicon-32.png`・`apple-touch-icon.png`（180px）・`og-image.png`（1200×630）を書き出す
 - PNG は手元の Chrome のヘッドレスモードで描画する。OGP 画像は Google Fonts を読むので、ネットワークに繋がっている必要がある
+- 書き出したら、コミットの前に `ui/public/og-image.png` を開いて目で確かめる。フォントを読み込めないと、エラーにならずに別のフォント（Hiragino Sans など）で描かれる
 - 環境変数:
   - `CHROME_PATH`: Chrome の実行ファイル（既定: `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`）
 - `npm run build` には含まない。ビルドのたびに作り直さず、書き出したファイルをそのまま使う
