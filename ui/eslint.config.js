@@ -37,7 +37,7 @@ export default defineConfig([
     },
   },
   {
-    files: ['src/lib/**/*.ts'],
+    files: ['src/lib/**/*.{ts,tsx}'],
     rules: {
       'no-restricted-imports': [
         'error',
