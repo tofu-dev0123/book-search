@@ -2,6 +2,8 @@
 
 UI（`ui/`、TypeScript）のコードを書くときのルール。人・Claude Code・レビュー（[reviewer](../.claude/agents/reviewer.md) の G1）が同じこの文書を基準にする。Python のルールは [coding-rules.md](coding-rules.md) にある。
 
+## 守らせる手段
+
 ルールの性質ごとに、守らせる手段を分けている。
 
 | ルール | 手段 |
