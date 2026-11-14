@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+import { BrandIcon } from '../components/BrandIcon'
 import { QueryForm } from '../components/QueryForm'
 import { BRAND_NAME, OPENBD_URL, pickPlaceholder, REPOSITORY_URL } from '../lib/brand'
 import styles from './Home.module.css'
@@ -11,7 +12,11 @@ export function Home() {
   return (
     <div className={styles.home}>
       <header className={styles.bar}>
-        <span className={styles.brand}>{BRAND_NAME}</span>
+        {/* 名前はサービスを紹介するホームでだけ見せる（検索結果のヘッダーはアイコンだけ） */}
+        <span className={styles.brand}>
+          <BrandIcon size={22} />
+          {BRAND_NAME}
+        </span>
       </header>
       <main className={styles.center}>
         <QueryForm id="q-home" size="large" placeholder={placeholder} />

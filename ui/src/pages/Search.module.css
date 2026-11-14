@@ -19,10 +19,7 @@
 
 .brand {
   flex: none;
-  font-weight: 700;
   color: var(--fg);
-  letter-spacing: 0.08em;
-  text-decoration: none;
 }
 
 .main {

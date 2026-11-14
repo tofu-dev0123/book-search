@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, Navigate, useSearchParams } from 'react-router'
 
 import { BookList } from '../components/BookList'
+import { BrandIcon } from '../components/BrandIcon'
 import { LoadingBar } from '../components/LoadingBar'
 import { Pager } from '../components/Pager'
 import { QueryForm } from '../components/QueryForm'
@@ -75,8 +76,9 @@ export function Search() {
       <meta name="robots" content="noindex" />
       <header className={styles.header}>
         <div className={styles.inner}>
-          <Link to="/" className={styles.brand}>
-            {BRAND_NAME}
+          {/* 名前は14文字と長く、並べると検索欄が縮むのでアイコンだけにする。名前は読み上げとツールチップで伝える */}
+          <Link to="/" className={styles.brand} aria-label={BRAND_NAME} title={BRAND_NAME}>
+            <BrandIcon size={26} />
           </Link>
           <QueryForm key={q} id="q-search" size="small" defaultValue={q} />
         </div>
