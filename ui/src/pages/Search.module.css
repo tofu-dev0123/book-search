@@ -1,0 +1,73 @@
+/* ヘッダーの中身と一覧を、画面中央の同じ幅の列に収める */
+.page {
+  --column: 720px;
+}
+
+.header {
+  position: relative;
+  padding: 16px var(--gutter);
+  border-bottom: 1px solid var(--line);
+}
+
+.inner {
+  max-width: var(--column);
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.brand {
+  flex: none;
+  font-weight: 700;
+  color: var(--fg);
+  letter-spacing: 0.08em;
+  text-decoration: none;
+}
+
+.main {
+  max-width: var(--column);
+  margin-inline: auto;
+  padding: 20px var(--gutter) 48px;
+}
+
+.results {
+  display: grid;
+  gap: 28px;
+  transition: opacity 0.2s;
+}
+
+.dimmed {
+  opacity: 0.35;
+}
+
+.summary {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.message,
+.error {
+  margin: 0;
+  padding-block: 40px;
+  color: var(--muted);
+}
+
+.error {
+  color: var(--warn);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .results {
+    transition: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .inner {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+}

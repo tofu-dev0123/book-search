@@ -1,0 +1,28 @@
+/* フルスクリーンの1画面。上段・中央・下段の3段 */
+.home {
+  min-height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+.bar {
+  padding: 20px var(--gutter);
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.brand {
+  font-weight: 700;
+  color: var(--fg);
+  letter-spacing: 0.08em;
+}
+
+.center {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  padding: 0 var(--gutter) 8vh;
+}

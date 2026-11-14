@@ -7,6 +7,7 @@
 - Docker と Docker Compose
 - Docker に割り当てるメモリは 4GB 以上（ES のヒープを 1GB に固定している。ヒープ以外にもメモリを使う）
   - Colima の場合: `colima start --memory 4`
+- 検索 UI を動かす場合は Node.js（版は `ui/.node-version`）と npm
 
 ## 起動
 
@@ -145,6 +146,37 @@ from elasticsearch import Elasticsearch
 from book_search.search import query
 
 query.search(Elasticsearch("http://localhost:9200"), "歴史", size=3, from_=0)
+```
+
+## 検索 UI
+
+### 起動
+
+```bash
+cd ui
+npm ci
+npm run dev
+```
+
+- `localhost:3000` で待ち受ける。3000 番が埋まっているときは、別のポートに移らずにエラーで止まる（検索 API の CORS の既定が `http://localhost:3000` のため）
+- 前提: 検索 API が起動している（上の「検索 API」）
+- 環境変数:
+  - `VITE_API_URL`: 検索 API の接続先（既定: `http://localhost:8000`）。`VITE_API_URL=http://localhost:8001 npm run dev` のように渡す
+
+### 確認
+
+ブラウザで `localhost:3000` を開き、「探しているのは、」に続く空欄に `歴史` と入れて送ると、`/search?q=歴史` に移って検索結果が並ぶ。
+
+### 整形・lint・テスト・ビルド
+
+`ui/` で実行する。
+
+```bash
+npm run format:check   # 整形の確認（整形するなら npm run format）
+npm run lint           # ESLint
+npm run typecheck      # 型チェック
+npm test               # Vitest（src/lib/ の関数のテスト）
+npm run build          # ui/dist/ にビルドする
 ```
 
 ## 整形・lint・テスト

@@ -1,0 +1,49 @@
+:root {
+  --bg: #ffffff;
+  --fg: #17191c;
+  --muted: #6b7078;
+  --faint: #b9bdc3;
+  --line: #e3e5e8;
+  --accent: #1f3c88;
+  --warn: #a3401a;
+  --cover: #eceef1;
+  --sans: 'Zen Kaku Gothic New', 'Hiragino Sans', 'Yu Gothic', system-ui, sans-serif;
+  --gutter: max(24px, env(safe-area-inset-left, 0px));
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121315;
+    --fg: #e8e9eb;
+    --muted: #9a9fa7;
+    --faint: #50555c;
+    --line: #2a2d31;
+    --accent: #9db4f0;
+    --warn: #ef9a78;
+    --cover: #23262a;
+    color-scheme: dark;
+  }
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+  line-height: 1.7;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
