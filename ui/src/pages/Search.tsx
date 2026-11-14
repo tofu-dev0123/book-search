@@ -35,7 +35,9 @@ export function Search() {
     const timer = setTimeout(() => setDelayedKey(key), LOADING_DELAY_MS)
     search(q, toFrom(page), PAGE_SIZE, controller.signal)
       .then((response) => {
+        // 応答が来たら遅延表示を止め、前の検索で残った key も消す（戻るで同じ検索に戻ったとき、すぐに出さない）
         clearTimeout(timer)
+        setDelayedKey(null)
         // 総件数を超えるページは 1 ページ目に置き換える
         if (response.hits.length === 0 && response.total > 0 && page > 1) {
           setParams({ q }, { replace: true })
@@ -46,6 +48,7 @@ export function Search() {
       .catch(() => {
         if (controller.signal.aborted) return
         clearTimeout(timer)
+        setDelayedKey(null)
         setResult({ key, q, page, failed: true })
       })
     return () => {
@@ -60,6 +63,8 @@ export function Search() {
   const showLoading = loading && delayedKey === key
 
   function move(next: number) {
+    // 読み込み中のページ送りは前の結果の page で描いているので、いまの URL と同じページなら積まない
+    if (next === page) return
     setParams({ q, page: String(next) })
     window.scrollTo(0, 0)
   }
