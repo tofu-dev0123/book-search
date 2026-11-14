@@ -6,8 +6,8 @@ Python のコードを書くときのルール。人・Claude Code・レビュ�
 
 | ルール | 手段 |
 |---|---|
-| 本文を Claude に届ける | Claude Code のフック（`.claude/hooks/coding-rules.sh`）。セッションで最初の `.py` の編集を止めて、この文書を返す |
-| format・lint | Claude Code のフック（`.claude/hooks/ruff.sh`） |
+| 本文を Claude に届ける | Claude Code のフック（`.claude/hooks/coding-rules.sh`）。セッションで最初の `.py` の編集を止めて、この文書を返す。Bash で書き換えた場合は、書き換えの後に見直しの指示と一緒に返す（`.claude/hooks/bash-py.sh`） |
+| format・lint | Claude Code のフック（`.claude/hooks/ruff.sh`）。Bash で書き換えた `.py` にも流す（`.claude/hooks/bash-py.sh`） |
 | 依存の向き | `tests/test_dependencies.py` |
 | 実行の漏れ | `/implement` の完了条件の検証で ruff と pytest を必ず流す |
 | それ以外（責務の置き場所・テストの方針・禁止事項・コメント） | レビュー（この文書に沿っているか） |
@@ -88,5 +88,5 @@ uv run ruff check           # lint（自動で直せるものは --fix）
 ```
 
 - 設定は `pyproject.toml` の `[tool.ruff]`（`line-length = 120`、`select = ["E", "F", "I", "UP", "B"]`）
-- Claude Code が `.py` を編集すると、フックが `ruff format` と `ruff check --fix` を流す。自動で直せない違反は Claude に返る
+- Claude Code が `.py` を編集すると、フックが `ruff format` と `ruff check --fix` を流す。自動で直せない違反は Claude に返る。Bash で書き換えた場合も、書き換えの後に流す
 - ルールを足すときは、必要になったものを個別に `select` に足す（`ALL` は使わない）
