@@ -68,7 +68,7 @@ git switch -c "feature/issue#<番号>"
 やること を1項目ずつ実装し、項目ごとにコミットする。
 
 - Issue の範囲外の変更を入れない（ついでのリファクタ・整形など）。気付いたことは PR の「別 Issue の候補」に回す
-- `docs/coding-rules.md` に沿う。書かれていないことは周囲のコードに合わせる
+- 実装ルール（Python は `docs/coding-rules.md`、UI は `docs/coding-rules-ui.md`）に沿う。書かれていないことは周囲のコードに合わせる
 - 手順（起動・投入・設定など）が変わったら `docs/` を更新する
 
 コミットメッセージ:
@@ -97,6 +97,16 @@ EOF
   uv run ruff format --check
   uv run ruff check
   uv run pytest
+  ```
+
+- `ui/` を変えたときは、`ui/` で次も流して通す
+
+  ```bash
+  npm run lint
+  npm run format:check
+  npm run typecheck
+  npm test
+  npm run build
   ```
 
 - 推測で「満たす」としない。確かめられなかった条件は「満たさない」とする
