@@ -9,6 +9,20 @@
   - Colima の場合: `colima start --memory 4`
 - 検索 UI を動かす場合は Node.js（版は `ui/.node-version`）と npm
 
+## まとめて起動する
+
+リポジトリ直下で実行する。
+
+```bash
+make dev
+```
+
+- Elasticsearch を起動して healthy になるまで待ち、検索 API（`localhost:8000`）と検索 UI（`localhost:3000`）を並行して起動する。個別の起動手順は下の「起動」「検索 API」「検索 UI」
+- 前提: `books` に書誌を投入済み（下の「書誌の投入」）。投入は `make dev` に含まない
+- `ui/node_modules` がなければ、先に `npm ci` を流す。依存を変えたとき（`ui/package-lock.json` が変わったとき）は流さないので、手で `cd ui && npm ci` を流す
+- Ctrl+C で API と UI が止まる。Elasticsearch は動いたままで、次の `make dev` では起動を待たない。止めるときは「停止」の `docker compose down`
+- API と UI の片方が終了すると（3000 番が埋まっているときの UI など）、もう片方も止めて `make dev` は失敗で終わる
+
 ## 起動
 
 ```bash
