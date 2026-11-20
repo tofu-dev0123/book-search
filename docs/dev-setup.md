@@ -149,6 +149,15 @@ URL に日本語をそのまま書くと（`'localhost:8000/search?q=歴史'`）
 
 - パラメータ: `q`（必須。空や空白だけは 422）、`size`（1〜100、既定 20）、`from`（0 以上、既定 0。`from + size` は 10000 以下）
 - 範囲外の値は 422。Elasticsearch に繋がらないとき、または `books` がないときは 503
+
+```bash
+curl -s 'localhost:8000/books/<ISBN>' | python3 -m json.tool
+```
+
+`<ISBN>` には、検索結果の `isbn` の値（数字13桁）を入れる。書誌の7項目（`isbn`・`title`・`author`・`publisher`・`pubdate`・`cover`・`description`）が返る。`score` は含まない。
+
+- `books` にない ISBN は 404。数字13桁でない（ハイフン付き・ISBN-10 など）は 422
+- Elasticsearch に繋がらないとき、または `books` がないときは 503
 - API の仕様は `localhost:8000/docs` でも見られる
 
 ### Python から検索する

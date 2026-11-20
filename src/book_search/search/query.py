@@ -3,7 +3,7 @@
 API に依存しない関数として持ち、評価スクリプトからも直接呼べるようにする。
 """
 
-from elasticsearch import Elasticsearch
+from elasticsearch import Elasticsearch, NotFoundError
 
 INDEX = "books"
 
@@ -26,3 +26,15 @@ def search(client: Elasticsearch, q: str, size: int, from_: int, index: str = IN
         "took_ms": res["took"],
         "hits": [{**hit["_source"], "score": hit["_score"]} for hit in res["hits"]["hits"]],
     }
+
+
+def get_book(client: Elasticsearch, isbn: str, index: str = INDEX) -> dict | None:
+    # _id には ISBN を入れている（ingest/load.py）ので、検索せずに1件を直接取る
+    try:
+        res = client.get(index=index, id=isbn, source=SOURCE_FIELDS)
+    except NotFoundError as e:
+        # 書誌がないときも index がないときも 404 になる。書誌がないときだけ本文に found: false が入る
+        if isinstance(e.body, dict) and e.body.get("found") is False:
+            return None
+        raise
+    return res["_source"]

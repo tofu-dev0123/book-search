@@ -3,7 +3,7 @@ import os
 import sys
 
 import pytest
-from elasticsearch import Elasticsearch
+from elasticsearch import Elasticsearch, NotFoundError
 
 from book_search.ingest import load
 from book_search.search import query
@@ -58,3 +58,24 @@ def test_search_returns_matching_books(es):
     assert res["total"] == 1
     assert [hit["isbn"] for hit in res["hits"]] == ["9780000000002"]
     assert set(res["hits"][0]) == {*query.SOURCE_FIELDS, "score"}
+
+
+@pytest.mark.es
+def test_get_book_returns_book(es):
+    book = query.get_book(es, "9780000000002", index=TEST_INDEX)
+
+    assert book["title"] == "機械学習入門"
+    assert set(book) == set(query.SOURCE_FIELDS)
+
+
+@pytest.mark.es
+def test_get_book_missing_isbn_is_none(es):
+    assert query.get_book(es, "9780000000000", index=TEST_INDEX) is None
+
+
+@pytest.mark.es
+def test_get_book_missing_index_raises(es):
+    with pytest.raises(NotFoundError) as e:
+        query.get_book(es, "9780000000002", index="test-books-missing")
+
+    assert e.value.error == "index_not_found_exception"
