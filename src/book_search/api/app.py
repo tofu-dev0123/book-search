@@ -5,7 +5,7 @@ import os
 from typing import Annotated
 
 from elasticsearch import ConnectionError, ConnectionTimeout, Elasticsearch, NotFoundError
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Path, Query
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -64,6 +64,22 @@ def search(
         if e.error == "index_not_found_exception":
             raise unavailable(e) from e
         raise
+
+
+@app.get("/books/{isbn}")
+def book(isbn: Annotated[str, Path(pattern=r"^[0-9]{13}$")]) -> dict:
+    # openBD の収録 ISBN はすべて数字13桁。\d は全角などの数字も通すので [0-9] にする
+    try:
+        found = query.get_book(client, isbn)
+    except (ConnectionError, ConnectionTimeout) as e:
+        raise unavailable(e) from e
+    except NotFoundError as e:
+        if e.error == "index_not_found_exception":
+            raise unavailable(e) from e
+        raise
+    if found is None:
+        raise HTTPException(status_code=404, detail="書誌が見つからない")
+    return found
 
 
 @app.get("/healthz")

@@ -55,3 +55,73 @@ def test_missing_index_is_503(search_raises):
     res = client.get("/search", params={"q": "歴史"})
 
     assert res.status_code == 503
+
+
+BOOK = {
+    "isbn": "9780000000001",
+    "title": "日本の歴史",
+    "author": "著者",
+    "publisher": "出版社",
+    "pubdate": "2020",
+    "cover": "",
+    "description": "古代から近代までの日本の歴史を、史料に基づいてたどる。",
+}
+
+
+@pytest.fixture
+def get_book_returns(monkeypatch):
+    # search の get_book を差し替え、API が受け取る戻り値か例外だけを作る
+    def patch(result):
+        def get_book(*args, **kwargs):
+            if isinstance(result, Exception):
+                raise result
+            return result
+
+        monkeypatch.setattr(query, "get_book", get_book)
+
+    return patch
+
+
+def test_book_found_is_200(get_book_returns):
+    get_book_returns(BOOK)
+
+    res = client.get("/books/9780000000001")
+
+    assert res.status_code == 200
+    assert res.json() == BOOK
+    assert "score" not in res.json()
+
+
+def test_book_missing_is_404(get_book_returns):
+    get_book_returns(None)
+
+    res = client.get("/books/9780000000000")
+
+    assert res.status_code == 404
+    assert res.json() == {"detail": "書誌が見つからない"}
+
+
+@pytest.mark.parametrize(
+    "isbn", ["abc", "978-4-00-000000-0", "978400000000", "97800000000011", "９７８０００００００００１"]
+)
+def test_book_invalid_isbn_is_422(isbn):
+    res = client.get(f"/books/{isbn}")
+
+    assert res.status_code == 422
+    assert res.json()["detail"][0]["loc"] == ["path", "isbn"]
+
+
+def test_book_unreachable_es_is_503(get_book_returns):
+    get_book_returns(ConnectionError("接続できない"))
+
+    res = client.get("/books/9780000000001")
+
+    assert res.status_code == 503
+
+
+def test_book_missing_index_is_503(get_book_returns):
+    get_book_returns(not_found("index_not_found_exception"))
+
+    res = client.get("/books/9780000000001")
+
+    assert res.status_code == 503
