@@ -20,11 +20,11 @@ export type SearchResponse = {
 }
 
 // API が 200 以外を返したとき。検索では 503・422 などを区別せず「使えない」として扱う
-export class SearchError extends Error {
+export class ApiError extends Error {
   readonly status: number
 
   constructor(status: number) {
-    super(`検索 API が ${status} を返した`)
+    super(`API が ${status} を返した`)
     this.status = status
   }
 }
@@ -38,13 +38,13 @@ export async function search(
 ): Promise<SearchResponse> {
   const params = new URLSearchParams({ q, from: String(from), size: String(size) })
   const res = await fetch(`${API_URL}/search?${params}`, { signal })
-  if (!res.ok) throw new SearchError(res.status)
+  if (!res.ok) throw new ApiError(res.status)
   return res.json()
 }
 
 // 書誌がないとき（404）と ISBN の形式の誤り（422）は、status で見分ける
 export async function getBook(isbn: string, signal?: AbortSignal): Promise<Book> {
   const res = await fetch(`${API_URL}/books/${encodeURIComponent(isbn)}`, { signal })
-  if (!res.ok) throw new SearchError(res.status)
+  if (!res.ok) throw new ApiError(res.status)
   return res.json()
 }

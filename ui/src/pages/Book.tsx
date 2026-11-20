@@ -4,7 +4,7 @@ import { Link, useLocation, useNavigate, useParams } from 'react-router'
 import { Cover } from '../components/Cover'
 import { Header } from '../components/Header'
 import { LoadingIcon } from '../components/LoadingIcon'
-import { type Book as BookData, getBook, SearchError } from '../lib/api'
+import { type Book as BookData, getBook, ApiError } from '../lib/api'
 import { BRAND_NAME } from '../lib/brand'
 import { LOADING_DELAY_MS } from '../lib/config'
 import { formatPubdate, toMetaDescription } from '../lib/format'
@@ -40,7 +40,7 @@ export function Book() {
         clearTimeout(timer)
         setDelayedIsbn(null)
         // ISBN の形式の誤り（422）も、利用者にとっては「その本はない」なので 404 と同じ表示にする
-        const notFound = e instanceof SearchError && (e.status === 404 || e.status === 422)
+        const notFound = e instanceof ApiError && (e.status === 404 || e.status === 422)
         setResult(notFound ? { isbn, notFound: true } : { isbn, failed: true })
       })
     return () => {
@@ -55,7 +55,10 @@ export function Book() {
   return (
     <div className={styles.page}>
       <title>{book ? `${book.title} - ${BRAND_NAME}` : BRAND_NAME}</title>
-      {book && <meta name="description" content={toMetaDescription(book.description)} />}
+      {/* 内容紹介が空の書誌では、空の description を出さない */}
+      {book?.description && (
+        <meta name="description" content={toMetaDescription(book.description)} />
+      )}
       <Header q={q} />
       <main className={styles.main}>
         {!current && delayedIsbn === isbn && <LoadingIcon />}
