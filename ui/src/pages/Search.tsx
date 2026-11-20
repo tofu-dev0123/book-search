@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { Navigate, useSearchParams } from 'react-router'
+import { useEffect, useLayoutEffect, useState } from 'react'
+import { Navigate, useNavigationType, useSearchParams } from 'react-router'
 
 import { BookList } from '../components/BookList'
 import { Header } from '../components/Header'
@@ -17,17 +17,44 @@ type Result = { key: string; q: string; page: number } & (
   { response: SearchResponse } | { failed: true }
 )
 
+// 詳細画面から一覧へ戻ったときに、取り直しを待たずに描き、見ていた位置へ戻すため、
+// 一覧を離れる直前に表示していた結果とスクロール位置を1件分だけ持つ
+let saved: { result: Result; scrollY: number } | null = null
+
 export function Search() {
   const [params, setParams] = useSearchParams()
   const q = params.get('q')?.trim() ?? ''
   const page = parsePage(params.get('page'))
   const key = `${q}\n${page}`
 
-  const [result, setResult] = useState<Result | null>(null)
+  // 保持した結果を使うのは、履歴を戻る遷移（POP）で検索語とページが同じときだけ。
+  // ヘッダーから検索し直したとき（PUSH）は、利用者が探し直しているので取り直す
+  const navigationType = useNavigationType()
+  const [restored] = useState(() =>
+    navigationType === 'POP' && saved?.result.key === key ? saved : null,
+  )
+  const [result, setResult] = useState<Result | null>(restored?.result ?? null)
   const [delayedKey, setDelayedKey] = useState<string | null>(null)
+  const shownKey = result?.key
+
+  // 描いた直後、ブラウザに表示される前に位置を戻し、先頭から飛ぶ動きを見せない
+  useLayoutEffect(() => {
+    if (restored) window.scrollTo(0, restored.scrollY)
+  }, [restored])
+
+  // 一覧を離れるとき（詳細画面へ移るときなど）の結果と位置を残す。
+  // 片付けは次の画面の描画より前に走るので、scrollY はまだ一覧での位置になっている。
+  // 取得に失敗した結果は残さない（戻ったときに取り直せるようにする）
+  useLayoutEffect(() => {
+    return () => {
+      saved = result && 'response' in result ? { result, scrollY: window.scrollY } : null
+    }
+  }, [result])
 
   useEffect(() => {
     if (!q) return
+    // 表示中の結果がいまの検索語とページのもの（保持した結果を描いたとき・取得し終えたとき）なら、取り直さない
+    if (shownKey === key) return
     // 新しい検索やページ送りを始めたら前のリクエストを中断し、遅れて返った古い結果で上書きしない
     const controller = new AbortController()
     const timer = setTimeout(() => setDelayedKey(key), LOADING_DELAY_MS)
@@ -53,7 +80,7 @@ export function Search() {
       controller.abort()
       clearTimeout(timer)
     }
-  }, [q, page, key, setParams])
+  }, [q, page, key, shownKey, setParams])
 
   if (!q) return <Navigate to="/" replace />
 
