@@ -2,7 +2,13 @@ import { useState } from 'react'
 
 import { BrandIcon } from '../components/BrandIcon'
 import { QueryForm } from '../components/QueryForm'
-import { BRAND_NAME, OPENBD_URL, pickPlaceholder, REPOSITORY_URL } from '../lib/brand'
+import {
+  BRAND_NAME,
+  OPENBD_URL,
+  pickPlaceholder,
+  REPOSITORY_URL,
+  SITE_DESCRIPTION,
+} from '../lib/brand'
 import styles from './Home.module.css'
 
 export function Home() {
@@ -11,6 +17,7 @@ export function Home() {
 
   return (
     <div className={styles.home}>
+      <meta name="description" content={SITE_DESCRIPTION} />
       <header className={styles.bar}>
         {/* 名前はサービスを紹介するホームでだけ見せる（検索結果のヘッダーはアイコンだけ） */}
         <span className={styles.brand}>
