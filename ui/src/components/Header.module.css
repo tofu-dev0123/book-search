@@ -1,0 +1,25 @@
+/* 中身は、置く画面の --column の幅で中央に揃える */
+.header {
+  padding: 16px var(--gutter);
+  border-bottom: 1px solid var(--line);
+}
+
+.inner {
+  max-width: var(--column);
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.brand {
+  flex: none;
+  color: var(--fg);
+}
+
+@media (max-width: 560px) {
+  .inner {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+}

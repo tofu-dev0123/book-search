@@ -25,17 +25,7 @@
 }
 
 .cover {
-  display: block;
   width: 56px;
-  aspect-ratio: 2 / 3;
-  /* 書影は切り取らずに枠へ収める（ADR-002: 改変しない） */
-  object-fit: contain;
-}
-
-/* 敷いた面と同じ色にならないよう、細い線で縁取る */
-.blank {
-  background: var(--cover);
-  box-shadow: inset 0 0 0 1px var(--line);
 }
 
 .body {

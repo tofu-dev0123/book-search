@@ -1,18 +1,15 @@
 import { useEffect, useState } from 'react'
-import { Link, Navigate, useSearchParams } from 'react-router'
+import { Navigate, useSearchParams } from 'react-router'
 
 import { BookList } from '../components/BookList'
-import { BrandIcon } from '../components/BrandIcon'
+import { Header } from '../components/Header'
 import { LoadingIcon } from '../components/LoadingIcon'
 import { Pager } from '../components/Pager'
-import { QueryForm } from '../components/QueryForm'
 import { search, type SearchResponse } from '../lib/api'
 import { BRAND_NAME } from '../lib/brand'
+import { LOADING_DELAY_MS } from '../lib/config'
 import { PAGE_SIZE, parsePage, toFrom } from '../lib/paging'
 import styles from './Search.module.css'
-
-// ローカルの API は数十 ms で返るので、この時間内に返れば読み込み中の表示を出さない（ちらつきを防ぐ）
-const LOADING_DELAY_MS = 200
 
 // どの検索語とページに対する結果かを持ち、表示中の URL と比べて読み込み中かを判定する。
 // 読み込み中は前の結果を描き続けるので、件数やページ送りも前の結果の q・page で描く
@@ -74,15 +71,7 @@ export function Search() {
     <div className={styles.page}>
       <title>{`「${q}」の検索結果 - ${BRAND_NAME}`}</title>
       <meta name="robots" content="noindex" />
-      <header className={styles.header}>
-        <div className={styles.inner}>
-          {/* 名前は14文字と長く、並べると検索欄が縮むのでアイコンだけにする。名前は読み上げとツールチップで伝える */}
-          <Link to="/" className={styles.brand} aria-label={BRAND_NAME} title={BRAND_NAME}>
-            <BrandIcon size={26} />
-          </Link>
-          <QueryForm key={q} id="q-search" size="small" defaultValue={q} />
-        </div>
-      </header>
+      <Header q={q} />
       <main className={styles.main}>
         {showLoading && <LoadingIcon />}
         {/* 読み込み中は前の結果を残し、200ms を過ぎたら薄くする。初回は何も出さない */}

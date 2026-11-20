@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-import { formatPubdate } from './format'
+import { formatPubdate, META_DESCRIPTION_LENGTH, toMetaDescription } from './format'
 
 describe('formatPubdate', () => {
   test.each([
@@ -21,5 +21,23 @@ describe('formatPubdate', () => {
 
   test.each(['c2001-', ''])('年が取れない %j は空文字にする', (pubdate) => {
     expect(formatPubdate(pubdate)).toBe('')
+  })
+})
+
+describe('toMetaDescription', () => {
+  test('改行と連続する空白を1つの空白にまとめる', () => {
+    expect(toMetaDescription('  一行目。\n\n二行目。\t 三行目。 ')).toBe(
+      '一行目。 二行目。 三行目。',
+    )
+  })
+
+  test('先頭から META_DESCRIPTION_LENGTH 字までにする', () => {
+    const text = 'あ'.repeat(META_DESCRIPTION_LENGTH + 10)
+    expect(toMetaDescription(text)).toBe('あ'.repeat(META_DESCRIPTION_LENGTH))
+  })
+
+  test('サロゲートペアの文字も1字として数え、途中で切らない', () => {
+    const text = '𠮷'.repeat(META_DESCRIPTION_LENGTH + 1)
+    expect(toMetaDescription(text)).toBe('𠮷'.repeat(META_DESCRIPTION_LENGTH))
   })
 })

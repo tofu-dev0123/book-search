@@ -1,0 +1,107 @@
+/* 検索結果と同じ、画面中央の 720px の列に収める */
+.page {
+  --column: 720px;
+}
+
+/* 読み込み中の表示（LoadingIcon）を、欄の上部中央に重ねる基準にする */
+.main {
+  position: relative;
+  max-width: var(--column);
+  margin-inline: auto;
+  padding: 20px var(--gutter) 48px;
+}
+
+.back {
+  font-size: 13px;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.back:hover {
+  text-decoration: underline;
+}
+
+.book {
+  display: grid;
+  gap: 32px;
+  margin-top: 24px;
+}
+
+.head {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+.cover {
+  width: 140px;
+}
+
+.title {
+  margin: 0 0 16px;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.meta {
+  margin: 0;
+  display: grid;
+  gap: 4px;
+  font-size: 14px;
+}
+
+/* 見出しと値の2列。見出しの幅を揃えて、値の頭を縦に揃える */
+.row {
+  display: grid;
+  grid-template-columns: 5em 1fr;
+  gap: 16px;
+}
+
+.row dt {
+  color: var(--muted);
+}
+
+.row dd {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.heading {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* 原文の段落の区切りを残し、1行を 34 字程度に収めて読みやすくする */
+.description {
+  margin: 0;
+  max-width: 34em;
+  white-space: pre-line;
+}
+
+.message,
+.error {
+  margin: 0;
+  padding-block: 40px;
+  color: var(--muted);
+}
+
+.error {
+  color: var(--warn);
+}
+
+/* 狭い画面では、書影の横に書名と項目を置くと1行に数文字しか入らないので、書影の下に積む。項目も見出しと値を縦に積む */
+@media (max-width: 560px) {
+  .head {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
