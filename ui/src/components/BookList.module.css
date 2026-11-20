@@ -6,7 +6,8 @@
   gap: 20px;
 }
 
-/* 選択中（ホバー・キーボードのフォーカス）の行には薄い面を敷く。行の位置と文字は動かさない */
+/* 選択中（ホバー・キーボードのフォーカス）の行には薄い面を敷く。行の位置と文字は動かさない。
+   行全体が押せることは面で伝わるので、リンクの下線は付けない */
 .item {
   display: grid;
   grid-template-columns: 56px 1fr;
@@ -14,7 +15,7 @@
   margin-inline: -12px;
   padding: 12px;
   border-radius: 4px;
-  cursor: pointer;
+  text-decoration: none;
   outline-offset: 2px;
   transition: background-color 0.2s ease;
 }
