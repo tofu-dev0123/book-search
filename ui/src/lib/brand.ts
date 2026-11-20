@@ -1,6 +1,11 @@
 // 名前だけで、知りたいことから探せる強みを伝える。title・ヘッダー・OGP 画像（brand/build.ts）はここから作る
 export const BRAND_NAME = '知りたいことから探す書籍検索'
 
+// ホームの meta description。詳細画面が自分の description を出せるよう、index.html には置かずに Home で出す。
+// リンクのプレビュー（JS を実行しない）向けに、index.html の og:description にも同じ文を置いている
+export const SITE_DESCRIPTION =
+  '書名や著者はもちろん、「ベクトル検索を学べる本」のように、知りたいことをそのまま入れても探せます。書誌データは openBD を使っています。'
+
 export const REPOSITORY_URL = 'https://github.com/tofu-dev0123/book-search'
 
 export const OPENBD_URL = 'https://openbd.jp/'

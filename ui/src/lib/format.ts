@@ -7,3 +7,13 @@ export function formatPubdate(pubdate: string): string {
   const m = Number(month)
   return m >= 1 && m <= 12 ? `${year}年${m}月` : `${year}年`
 }
+
+// meta description に入れる長さ。検索結果のスニペットで切られずに出やすい長さに収める
+export const META_DESCRIPTION_LENGTH = 120
+
+// 内容紹介の改行・連続する空白は1つの空白にまとめる（meta では改行が意味を持たない）。
+// サロゲートペアの途中で切らないよう、文字（コードポイント）単位で数える
+export function toMetaDescription(description: string): string {
+  const text = description.replace(/\s+/g, ' ').trim()
+  return Array.from(text).slice(0, META_DESCRIPTION_LENGTH).join('')
+}

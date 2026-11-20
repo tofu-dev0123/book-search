@@ -1,35 +1,32 @@
-import { useState } from 'react'
+import { Link, useLocation } from 'react-router'
 
 import type { Hit } from '../lib/api'
 import { formatPubdate } from '../lib/format'
+import { Cover } from './Cover'
 import styles from './BookList.module.css'
 
 export function BookList({ hits }: { hits: Hit[] }) {
+  // 詳細画面の戻るリンクで「どの検索から来たか」を出すため、いまの一覧の URL を遷移の state に持たせる
+  const { pathname, search } = useLocation()
+  const from = `${pathname}${search}`
+
   return (
     <ol className={styles.list}>
       {hits.map((hit) => (
-        // 行の選択はキーボードでもできるようにする。押したときの動きは詳細画面の Issue で足す
-        <li key={hit.isbn} tabIndex={0} className={styles.item}>
-          <Cover url={hit.cover} />
-          <div className={styles.body}>
-            <div className={styles.title}>{hit.title}</div>
-            <div className={styles.meta}>
-              {[hit.author, hit.publisher, formatPubdate(hit.pubdate)].filter(Boolean).join('　')}
+        <li key={hit.isbn}>
+          {/* 行全体をリンクにし、Enter・新しいタブで開く・URL のコピーなど、リンクとしての操作をそのまま使えるようにする */}
+          <Link to={`/books/${hit.isbn}`} state={{ from }} className={styles.item}>
+            <Cover url={hit.cover} className={styles.cover} />
+            <div className={styles.body}>
+              <div className={styles.title}>{hit.title}</div>
+              <div className={styles.meta}>
+                {[hit.author, hit.publisher, formatPubdate(hit.pubdate)].filter(Boolean).join('　')}
+              </div>
+              <p className={styles.description}>{hit.description}</p>
             </div>
-            <p className={styles.description}>{hit.description}</p>
-          </div>
+          </Link>
         </li>
       ))}
     </ol>
-  )
-}
-
-// 書影がない書誌と、画像の読み込みに失敗した書誌は、同じ大きさの無地の枠にする
-function Cover({ url }: { url: string }) {
-  const [failed, setFailed] = useState(false)
-  if (!url || failed)
-    return <div className={`${styles.cover} ${styles.blank}`} aria-hidden="true" />
-  return (
-    <img src={url} alt="" loading="lazy" className={styles.cover} onError={() => setFailed(true)} />
   )
 }

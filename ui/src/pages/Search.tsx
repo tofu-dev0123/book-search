@@ -1,18 +1,15 @@
-import { useEffect, useState } from 'react'
-import { Link, Navigate, useSearchParams } from 'react-router'
+import { useEffect, useLayoutEffect, useState } from 'react'
+import { Navigate, useNavigationType, useSearchParams } from 'react-router'
 
 import { BookList } from '../components/BookList'
-import { BrandIcon } from '../components/BrandIcon'
+import { Header } from '../components/Header'
 import { LoadingIcon } from '../components/LoadingIcon'
 import { Pager } from '../components/Pager'
-import { QueryForm } from '../components/QueryForm'
 import { search, type SearchResponse } from '../lib/api'
 import { BRAND_NAME } from '../lib/brand'
+import { LOADING_DELAY_MS } from '../lib/config'
 import { PAGE_SIZE, parsePage, toFrom } from '../lib/paging'
 import styles from './Search.module.css'
-
-// ローカルの API は数十 ms で返るので、この時間内に返れば読み込み中の表示を出さない（ちらつきを防ぐ）
-const LOADING_DELAY_MS = 200
 
 // どの検索語とページに対する結果かを持ち、表示中の URL と比べて読み込み中かを判定する。
 // 読み込み中は前の結果を描き続けるので、件数やページ送りも前の結果の q・page で描く
@@ -20,17 +17,44 @@ type Result = { key: string; q: string; page: number } & (
   { response: SearchResponse } | { failed: true }
 )
 
+// 詳細画面から一覧へ戻ったときに、取り直しを待たずに描き、見ていた位置へ戻すため、
+// 一覧を離れる直前に表示していた結果とスクロール位置を1件分だけ持つ
+let saved: { result: Result; scrollY: number } | null = null
+
 export function Search() {
   const [params, setParams] = useSearchParams()
   const q = params.get('q')?.trim() ?? ''
   const page = parsePage(params.get('page'))
   const key = `${q}\n${page}`
 
-  const [result, setResult] = useState<Result | null>(null)
+  // 保持した結果を使うのは、履歴を戻る遷移（POP）で検索語とページが同じときだけ。
+  // ヘッダーから検索し直したとき（PUSH）は、利用者が探し直しているので取り直す
+  const navigationType = useNavigationType()
+  const [restored] = useState(() =>
+    navigationType === 'POP' && saved?.result.key === key ? saved : null,
+  )
+  const [result, setResult] = useState<Result | null>(restored?.result ?? null)
   const [delayedKey, setDelayedKey] = useState<string | null>(null)
+  const shownKey = result?.key
+
+  // 描いた直後、ブラウザに表示される前に位置を戻し、先頭から飛ぶ動きを見せない
+  useLayoutEffect(() => {
+    if (restored) window.scrollTo(0, restored.scrollY)
+  }, [restored])
+
+  // 一覧を離れるとき（詳細画面へ移るときなど）の結果と位置を残す。
+  // 片付けは次の画面の描画より前に走るので、scrollY はまだ一覧での位置になっている。
+  // 取得に失敗した結果は残さない（戻ったときに取り直せるようにする）
+  useLayoutEffect(() => {
+    return () => {
+      saved = result && 'response' in result ? { result, scrollY: window.scrollY } : null
+    }
+  }, [result])
 
   useEffect(() => {
     if (!q) return
+    // 表示中の結果がいまの検索語とページのもの（保持した結果を描いたとき・取得し終えたとき）なら、取り直さない
+    if (shownKey === key) return
     // 新しい検索やページ送りを始めたら前のリクエストを中断し、遅れて返った古い結果で上書きしない
     const controller = new AbortController()
     const timer = setTimeout(() => setDelayedKey(key), LOADING_DELAY_MS)
@@ -56,7 +80,7 @@ export function Search() {
       controller.abort()
       clearTimeout(timer)
     }
-  }, [q, page, key, setParams])
+  }, [q, page, key, shownKey, setParams])
 
   if (!q) return <Navigate to="/" replace />
 
@@ -74,15 +98,7 @@ export function Search() {
     <div className={styles.page}>
       <title>{`「${q}」の検索結果 - ${BRAND_NAME}`}</title>
       <meta name="robots" content="noindex" />
-      <header className={styles.header}>
-        <div className={styles.inner}>
-          {/* 名前は14文字と長く、並べると検索欄が縮むのでアイコンだけにする。名前は読み上げとツールチップで伝える */}
-          <Link to="/" className={styles.brand} aria-label={BRAND_NAME} title={BRAND_NAME}>
-            <BrandIcon size={26} />
-          </Link>
-          <QueryForm key={q} id="q-search" size="small" defaultValue={q} />
-        </div>
-      </header>
+      <Header q={q} />
       <main className={styles.main}>
         {showLoading && <LoadingIcon />}
         {/* 読み込み中は前の結果を残し、200ms を過ぎたら薄くする。初回は何も出さない */}

@@ -6,7 +6,8 @@
   gap: 20px;
 }
 
-/* 選択中（ホバー・キーボードのフォーカス）の行には薄い面を敷く。行の位置と文字は動かさない */
+/* 選択中（ホバー・キーボードのフォーカス）の行には薄い面を敷く。行の位置と文字は動かさない。
+   行全体が押せることは面で伝わるので、リンクの下線は付けない */
 .item {
   display: grid;
   grid-template-columns: 56px 1fr;
@@ -14,7 +15,7 @@
   margin-inline: -12px;
   padding: 12px;
   border-radius: 4px;
-  cursor: pointer;
+  text-decoration: none;
   outline-offset: 2px;
   transition: background-color 0.2s ease;
 }
@@ -25,17 +26,7 @@
 }
 
 .cover {
-  display: block;
   width: 56px;
-  aspect-ratio: 2 / 3;
-  /* 書影は切り取らずに枠へ収める（ADR-002: 改変しない） */
-  object-fit: contain;
-}
-
-/* 敷いた面と同じ色にならないよう、細い線で縁取る */
-.blank {
-  background: var(--cover);
-  box-shadow: inset 0 0 0 1px var(--line);
 }
 
 .body {

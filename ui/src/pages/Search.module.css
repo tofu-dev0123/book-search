@@ -3,24 +3,6 @@
   --column: 720px;
 }
 
-.header {
-  padding: 16px var(--gutter);
-  border-bottom: 1px solid var(--line);
-}
-
-.inner {
-  max-width: var(--column);
-  margin-inline: auto;
-  display: flex;
-  align-items: center;
-  gap: 28px;
-}
-
-.brand {
-  flex: none;
-  color: var(--fg);
-}
-
 /* 読み込み中の表示（LoadingIcon）を、結果の欄の上部中央に重ねる基準にする */
 .main {
   position: relative;
@@ -60,12 +42,5 @@
 @media (prefers-reduced-motion: reduce) {
   .results {
     transition: none;
-  }
-}
-
-@media (max-width: 560px) {
-  .inner {
-    flex-wrap: wrap;
-    gap: 12px;
   }
 }

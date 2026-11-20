@@ -1,7 +1,7 @@
-// 検索 API（GET /search）の呼び出し。応答の形は API と揃える
+// 検索 API（GET /search・GET /books/{isbn}）の呼び出し。応答の形は API と揃える
 import { API_URL } from './config'
 
-export type Hit = {
+export type Book = {
   isbn: string
   title: string
   author: string
@@ -9,8 +9,9 @@ export type Hit = {
   pubdate: string
   cover: string
   description: string
-  score: number
 }
+
+export type Hit = Book & { score: number }
 
 export type SearchResponse = {
   total: number
@@ -18,12 +19,12 @@ export type SearchResponse = {
   hits: Hit[]
 }
 
-// API が 200 以外を返したとき。UI は 503・422 などを区別せず「使えない」として扱う
-export class SearchError extends Error {
+// API が 200 以外を返したとき。検索では 503・422 などを区別せず「使えない」として扱う
+export class ApiError extends Error {
   readonly status: number
 
   constructor(status: number) {
-    super(`検索 API が ${status} を返した`)
+    super(`API が ${status} を返した`)
     this.status = status
   }
 }
@@ -37,6 +38,13 @@ export async function search(
 ): Promise<SearchResponse> {
   const params = new URLSearchParams({ q, from: String(from), size: String(size) })
   const res = await fetch(`${API_URL}/search?${params}`, { signal })
-  if (!res.ok) throw new SearchError(res.status)
+  if (!res.ok) throw new ApiError(res.status)
+  return res.json()
+}
+
+// 書誌がないとき（404）と ISBN の形式の誤り（422）は、status で見分ける
+export async function getBook(isbn: string, signal?: AbortSignal): Promise<Book> {
+  const res = await fetch(`${API_URL}/books/${encodeURIComponent(isbn)}`, { signal })
+  if (!res.ok) throw new ApiError(res.status)
   return res.json()
 }
