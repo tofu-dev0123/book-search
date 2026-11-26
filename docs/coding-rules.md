@@ -7,7 +7,7 @@ Python のコードを書くときのルール。人・Claude Code・レビュ�
 | ルール | 手段 |
 |---|---|
 | 本文を Claude に届ける | Claude Code のフック（`.claude/project-hooks/coding-rules.sh`）。セッションで最初の `.py` の編集を止めて、この文書を返す。Bash で書き換えた場合は、書き換えの後に見直しの指示と一緒に返す（`.claude/project-hooks/bash-edit.sh`） |
-| format・lint | Claude Code のフック（`.claude/hooks/ruff.sh`）。Bash で書き換えた `.py` にも流す（`.claude/project-hooks/bash-edit.sh`） |
+| format・lint | `./scripts/format`（Claude Code のフックが編集したファイルごとに呼ぶ）。Bash で書き換えた `.py` にも流す（`.claude/project-hooks/bash-edit.sh`） |
 | 依存の向き | `tests/test_dependencies.py` |
 | 実行の漏れ | `/implement` の完了条件の検証で ruff と pytest を必ず流す |
 | それ以外（責務の置き場所・命名・テストの方針・禁止事項・コメント） | レビュー（この文書に沿っているか） |

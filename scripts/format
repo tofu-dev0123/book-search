@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# 渡されたファイルを整形し、lint の自動修正を流す。issue-driven の run-format.sh が、編集したファイルごとに呼ぶ
+# （Bash で書き換えたファイルは .claude/project-hooks/bash-edit.sh が呼ぶ）。
+#
+#   ./scripts/format <ファイル>   リポジトリ直下からの相対パスを1つ受け取る
+#
+#   .py                          → ruff format と ruff check --fix
+#   ui/src/ の .ts・.tsx         → Prettier と eslint --fix
+#   ui/src/ の .css              → Prettier だけ
+#   それ以外                     → 何もしない
+#
+# 自動で直せない違反が残ったら、内容を出力して失敗で返す。
+# 型チェックは流さない（複数のファイルにまたがる変更の途中で、まだ直していないファイルのエラーが毎回返るため）。
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+path=${1#./}
+[[ -f "$path" ]] || exit 0
+
+case "$path" in
+  *.py)
+    if ! out=$(uv run --quiet ruff format "$path" 2>&1); then
+      echo "ruff format に失敗した: ${path}"
+      echo "$out"
+      exit 1
+    fi
+    if ! out=$(uv run --quiet ruff check --fix --output-format concise "$path" 2>&1); then
+      echo "ruff check で自動で直せない違反が残った: ${path}"
+      echo "$out"
+      exit 1
+    fi
+    ;;
+  ui/src/*.ts | ui/src/*.tsx | ui/src/*.css)
+    bin=ui/node_modules/.bin
+    if [[ ! -x "$bin/prettier" || ! -x "$bin/eslint" ]]; then
+      echo "ui/node_modules に Prettier・ESLint がないので流せなかった。cd ui && npm ci を流すこと"
+      exit 1
+    fi
+    # ui/ の設定ファイル（.prettierrc・eslint.config.js）を読ませるため、ui/ で流す
+    rel=${path#ui/}
+    if ! out=$(cd ui && node_modules/.bin/prettier --write --log-level warn "$rel" 2>&1); then
+      echo "Prettier に失敗した: ${path}"
+      echo "$out"
+      exit 1
+    fi
+    [[ "$path" == *.css ]] && exit 0
+    if ! out=$(cd ui && node_modules/.bin/eslint --fix "$rel" 2>&1); then
+      echo "ESLint で自動で直せない違反が残った: ${path}"
+      echo "$out"
+      exit 1
+    fi
+    ;;
+esac
+
+exit 0
