@@ -1,0 +1,131 @@
+{
+  "_generated": "conventions",
+  "permissions": {
+    "allow": [
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git branch:*)",
+      "Bash(gh issue list:*)",
+      "Bash(gh issue view:*)",
+      "Bash(gh pr list:*)",
+      "Bash(gh pr view:*)"
+    ],
+    "deny": [
+      "Read(**/.env)",
+      "Edit(**/.env)",
+      "Bash(rm -rf:*)",
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(gh repo delete:*)",
+      "Edit(./.claude/settings.json)",
+      "Edit(./.claude/.synced.json)",
+      "Edit(./.claude/hooks/**)",
+      "Edit(./.claude/rules/shared/**)",
+      "Edit(./.github/ISSUE_TEMPLATE/**)",
+      "Edit(./.claude/settings.local.json)",
+      "Edit(./.claude/.gitignore)",
+      "Edit(./.claude/skills/feature/**)",
+      "Edit(./.claude/skills/bugfix/**)",
+      "Edit(./.claude/skills/implement/**)",
+      "Edit(./.claude/agents/reviewer.md)",
+      "Read(**/.env.local)",
+      "Edit(**/.env.local)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/no-coauthor.sh"
+          },
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/generated-guard.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash|Read|Edit|Write|MultiEdit|NotebookEdit|Grep|Glob",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/env-guard.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/protect-branch.sh main"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/project-hooks/coding-rules.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/project-hooks/bash-edit.sh snapshot"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/sync-check.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/run-format.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/project-hooks/bash-edit.sh check"
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/project-hooks/bash-edit.sh check"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "source": "conventions@84b3d7c",
+  "target": "book-search",
+  "profiles": [
+    "flow-main",
+    "issue-driven"
+  ],
+  "files": {
+    ".claude/.gitignore": "sha256:ced771be89a8b13b6517f27cdcf0c8aadc2e16863cf7be34100eba45572ed1e5",
+    ".claude/agents/reviewer.md": "sha256:beb3965d3e9c44a362c294bac51f81e56b31ea33e787f8267497057ecfa7c34a",
+    ".claude/hooks/env-guard.sh": "sha256:cb5e765502af48307748d9054b1a7b2d0780141e84d2dccd30a0557a28fc138e",
+    ".claude/hooks/generated-guard.sh": "sha256:5180c80dfb9214e11a815ae002b01fd2ec0e2132b8e729d71f29cea108e900af",
+    ".claude/hooks/no-coauthor.sh": "sha256:3282b9edf30542c640789ea33f7519378470954844608b64e3ab1650391eebf4",
+    ".claude/hooks/protect-branch.sh": "sha256:4c306fbbc5328bcd541dc98b9cb4f94cac823cf7c290dbddacc2ca35e0da296d",
+    ".claude/hooks/run-format.sh": "sha256:28210a8f4aac9709bb2205fc4e0b7629b9fdf4e09d4c2274eb44c68ba7090eef",
+    ".claude/hooks/sync-check.sh": "sha256:0ef6cfc75465e96a3a1694558e2538eecacd69e3e2f332608d4ac760b853da4f",
+    ".claude/rules/shared/branch-flow.md": "sha256:d91ec12fecf6df2391d31d78a1417f12c72104ecbe8e68f4ac35b2f888d3b9ec",
+    ".claude/rules/shared/common.md": "sha256:9afe6e3b150d6ee0edbe9f03c25755193118a93573196f1e4a47cc539f5dc249",
+    ".claude/rules/shared/issue-driven.md": "sha256:0aa4e399ea16855be172e809289707581a3692e060f6b2acc2a736c614b01087",
+    ".claude/settings.json": "sha256:8d9ba0608db5c1c16f177f4a684f430c5f7a4a541dba335b0f0b24d358dbe9e0",
+    ".claude/skills/bugfix/SKILL.md": "sha256:38f875fad824556a99b50dfb4111ebfeea6f643ba625120c1500ff03ac40521a",
+    ".claude/skills/feature/SKILL.md": "sha256:5bf83426150a45d7475a7b1b7d507c4a32e6576ad10175f6083ea8bd4715ca35",
+    ".claude/skills/implement/SKILL.md": "sha256:6516dc842367a6211c03f3107527389c4db3e7c01cf1436349a8af76de55ceab",
+    ".github/ISSUE_TEMPLATE/bug.md": "sha256:903cad8dbcb8ecb95352265944f1863425a41d307f2308fb0be00c07868a51da",
+    ".github/ISSUE_TEMPLATE/implementation.md": "sha256:2c9bf021ba64c3e7ece9e5c44df91903ffb1ab5c7f96e53c40a28a9a96db8db2"
+  }
+}
