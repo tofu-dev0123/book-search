@@ -14,7 +14,7 @@ input=$(cat)
 tool_use_id=$(jq -r '.tool_use_id // ""' <<<"$input")
 session=$(jq -r '.session_id // ""' <<<"$input")
 project=${CLAUDE_PROJECT_DIR:-$(pwd)}
-hooks="$project/.claude/hooks"
+hooks="$project/.claude/project-hooks"
 snapshot_dir="${TMPDIR:-/tmp}/book-search-bash-edit"
 
 [[ -n "$tool_use_id" ]] || exit 0
@@ -51,9 +51,9 @@ feedback=""
 while IFS= read -r path; do
   hook_input=$(jq -nc --arg s "$session" --arg p "$project/$path" '{session_id: $s, tool_input: {file_path: $p}}')
   if [[ "$path" == *.py ]]; then
-    format="$hooks/ruff.sh"
+    format="$project/.claude/hooks/ruff.sh"
   else
-    format="$hooks/prettier-eslint.sh"
+    format="$project/.claude/hooks/prettier-eslint.sh"
   fi
   if ! out=$("$format" <<<"$hook_input" 2>&1); then
     feedback+="$out"$'\n'
