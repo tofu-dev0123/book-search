@@ -1,0 +1,30 @@
+{"id": "q01", "split": "test", "type": "title", "query": "幸せを科学する", "intent": "書籍『幸せを科学する 心理学からわかったこと』そのもの", "target_isbn": ""}
+{"id": "q02", "split": "dev", "type": "title", "query": "殴り合いの文化史", "intent": "書籍『殴り合いの文化史』そのもの", "target_isbn": ""}
+{"id": "q03", "split": "test", "type": "title", "query": "フーリエ解析学の序章", "intent": "書籍『フーリエ解析学の序章』そのもの", "target_isbn": ""}
+{"id": "q04", "split": "dev", "type": "title", "query": "N5 直前対策ドリル", "intent": "書籍『日本語能力試験 N5直前対策ドリル＆模試』そのもの", "target_isbn": ""}
+{"id": "q05", "split": "dev", "type": "title", "query": "サルはさよならを言わない", "intent": "書籍『サルはさよならを言わない』そのもの", "target_isbn": ""}
+{"id": "q06", "split": "dev", "type": "title", "query": "英語バカのすすめ", "intent": "書籍『英語バカのすすめ』そのもの", "target_isbn": ""}
+{"id": "q07", "split": "dev", "type": "author", "query": "若松英輔", "intent": "若松英輔が著者の本（共著を含む）", "target_isbn": ""}
+{"id": "q08", "split": "test", "type": "author", "query": "立川談志", "intent": "立川談志が著者の本", "target_isbn": ""}
+{"id": "q09", "split": "dev", "type": "author", "query": "Robert Harris", "intent": "作家 Robert Harris が著者の本", "target_isbn": ""}
+{"id": "q10", "split": "dev", "type": "author", "query": "パトナム", "intent": "哲学者 H. パトナムが著者の本（翻訳を含む）", "target_isbn": ""}
+{"id": "q11", "split": "dev", "type": "topic", "query": "社会心理学 入門", "intent": "社会心理学を初めて学ぶ人向けの入門書・教科書"}
+{"id": "q12", "split": "dev", "type": "topic", "query": "簿記 過去問", "intent": "簿記検定の過去問題集。級は問わない"}
+{"id": "q13", "split": "dev", "type": "topic", "query": "日本語能力試験 対策", "intent": "日本語能力試験（JLPT）の対策書。級は問わない"}
+{"id": "q14", "split": "dev", "type": "topic", "query": "明治 政治史", "intent": "明治期の日本の政治を扱った本"}
+{"id": "q15", "split": "dev", "type": "topic", "query": "赤ちゃん 育児", "intent": "乳児の育児の本。親向けの実用書"}
+{"id": "q16", "split": "test", "type": "topic", "query": "宇宙 物理学", "intent": "宇宙を物理学の立場から扱った本。一般向けも専門書も含む"}
+{"id": "q17", "split": "dev", "type": "topic", "query": "和食 レシピ", "intent": "家庭で作る和食のレシピ本"}
+{"id": "q18", "split": "test", "type": "topic", "query": "介護 認知症", "intent": "認知症の人の介護についての本。家族向けも専門職向けも含む"}
+{"id": "q19", "split": "test", "type": "topic", "query": "ロシア語 文法", "intent": "ロシア語の文法を学ぶ本"}
+{"id": "q20", "split": "dev", "type": "intent", "query": "子どもと一緒に読める宇宙の本", "intent": "小学生くらいの子どもと親が一緒に読める、宇宙や星についての本"}
+{"id": "q21", "split": "test", "type": "intent", "query": "数式を使わずに統計の考え方がわかる本", "intent": "数式をほとんど使わず、統計の考え方を説明する一般向けの本"}
+{"id": "q22", "split": "dev", "type": "intent", "query": "親の介護が始まったときに読む本", "intent": "親の介護が始まった家族向けに、制度や心構えを説明する本"}
+{"id": "q23", "split": "test", "type": "intent", "query": "異世界に転生する話", "intent": "主人公が異世界に転生・転移するファンタジー小説"}
+{"id": "q24", "split": "test", "type": "intent", "query": "初めて部下を持った人向けの本", "intent": "初めて部下を持つ管理職向けの、マネジメントの実用書"}
+{"id": "q25", "split": "dev", "type": "intent", "query": "戦国時代を舞台にした小説", "intent": "戦国時代を舞台にした歴史小説・時代小説"}
+{"id": "q26", "split": "dev", "type": "intent", "query": "小学生の自由研究に使える本", "intent": "小学生が夏休みの自由研究の題材や方法を探すための本"}
+{"id": "q27", "split": "dev", "type": "intent", "query": "一人暮らしの自炊を始める", "intent": "料理に慣れていない一人暮らしの人向けの、簡単な自炊の本"}
+{"id": "q28", "split": "dev", "type": "weakness", "query": "京都", "intent": "京都（土地・歴史・観光）を扱った本"}
+{"id": "q29", "split": "test", "type": "weakness", "query": "国語", "intent": "日本の学校教育の国語科の本（教科書・問題集・指導法）"}
+{"id": "q30", "split": "dev", "type": "weakness", "query": "愛", "intent": "愛をテーマにした本（恋愛・家族愛など）"}
