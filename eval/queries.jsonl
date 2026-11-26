@@ -27,4 +27,4 @@
 {"id": "q27", "split": "dev", "type": "intent", "query": "一人暮らしの自炊を始める", "intent": "料理に慣れていない一人暮らしの人向けの、簡単な自炊の本"}
 {"id": "q28", "split": "dev", "type": "weakness", "query": "京都", "intent": "京都（土地・歴史・観光）を扱った本"}
 {"id": "q29", "split": "test", "type": "weakness", "query": "国語", "intent": "日本の学校教育の国語科の本（教科書・問題集・指導法）"}
-{"id": "q30", "split": "dev", "type": "weakness", "query": "愛", "intent": "書名に「愛」を含む、または愛をテーマにした本"}
+{"id": "q30", "split": "dev", "type": "weakness", "query": "愛", "intent": "愛をテーマにした本（恋愛・家族愛など）"}
