@@ -1,5 +1,7 @@
+import io
 import json
 import sys
+import urllib.error
 from pathlib import Path
 
 import pytest
@@ -89,7 +91,27 @@ def test_fetch_keeps_previous_when_shrunk_below_ratio(monkeypatch, tmp_path):
     with pytest.raises(SystemExit) as exc:
         run_fetch(monkeypatch, out)
 
-    assert exc.value.code != 0
+    # sys.exit に文字列を渡すと、終了コードは 1 になる
+    assert isinstance(exc.value.code, str)
+    assert "置き換えない" in exc.value.code
+    assert out.read_text(encoding="utf-8") == before
+    assert not out.with_suffix(".jsonl.tmp").exists()
+
+
+def test_fetch_keeps_previous_when_request_fails(monkeypatch, tmp_path):
+    stub_openbd(monkeypatch, books(3))
+
+    def fail(isbns):
+        raise urllib.error.HTTPError(openbd.GET_URL, 503, "error", {}, io.BytesIO())  # type: ignore[arg-type]
+
+    monkeypatch.setattr(openbd, "fetch_records", fail)
+    out = tmp_path / "books.jsonl"
+    write_lines(out, 10)
+    before = out.read_text(encoding="utf-8")
+
+    with pytest.raises(urllib.error.HTTPError):
+        run_fetch(monkeypatch, out)
+
     assert out.read_text(encoding="utf-8") == before
     assert not out.with_suffix(".jsonl.tmp").exists()
 
