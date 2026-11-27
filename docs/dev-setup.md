@@ -214,6 +214,8 @@ Prettier・ESLint・型チェック・Vitest・ビルドの実行方法と、テ
 
 ruff（整形・lint）と pytest の実行方法、テストの置き場所と方針は [実装ルール](coding-rules.md) にある。
 
+Python と UI の検証は `./scripts/check` でまとめて流せる（ES が要るテストは含まない）。1つのファイルの整形と lint の自動修正は `./scripts/format <ファイル>`。
+
 ## 停止
 
 ```bash

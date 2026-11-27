@@ -1,6 +1,6 @@
 # 実装ルール（UI）
 
-UI（`ui/`、TypeScript）のコードを書くときのルール。人・Claude Code・レビュー（[reviewer](../.claude/agents/reviewer.md) の G1）が同じこの文書を基準にする。Python のルールは [coding-rules.md](coding-rules.md) にある。
+UI（`ui/`、TypeScript）のコードを書くときのルール。人・Claude Code・レビュー（[review.md](../.claude/review.md) の R10）が同じこの文書を基準にする。Python のルールは [coding-rules.md](coding-rules.md) にある。
 
 ## 守らせる手段
 
@@ -8,8 +8,8 @@ UI（`ui/`、TypeScript）のコードを書くときのルール。人・Claude
 
 | ルール | 手段 |
 |---|---|
-| 本文を Claude に届ける | Claude Code のフック（`.claude/hooks/coding-rules.sh`）。セッションで最初の UI のファイル（`ui/src/` の `.ts`・`.tsx`・`.css`）の編集を止めて、この文書を返す。Bash で書き換えた場合は、書き換えの後に見直しの指示と一緒に返す（`.claude/hooks/bash-edit.sh`） |
-| format・lint | Claude Code のフック（`.claude/hooks/prettier-eslint.sh`）。編集した UI のファイルに Prettier と ESLint を流す。Bash で書き換えた UI のファイルにも流す（`.claude/hooks/bash-edit.sh`） |
+| 本文を Claude に届ける | Claude Code のフック（`.claude/project-hooks/coding-rules.sh`）。セッションで最初の UI のファイル（`ui/src/` の `.ts`・`.tsx`・`.css`）の編集を止めて、この文書を返す。Bash で書き換えた場合は、書き換えの後に見直しの指示と一緒に返す（`.claude/project-hooks/bash-edit.sh`） |
+| format・lint | `./scripts/format`（Claude Code のフックが編集したファイルごとに呼ぶ）。編集した UI のファイルに Prettier と ESLint を流す。Bash で書き換えた UI のファイルにも流す（`.claude/project-hooks/bash-edit.sh`） |
 | 依存の向き | ESLint の `no-restricted-imports`（`ui/eslint.config.js`） |
 | 実行の漏れ | `/implement` の完了条件の検証で、`ui/` を変えたときは下の「コマンド」をすべて流す |
 | それ以外（責務の置き場所・命名・スタイル・テストの方針・禁止事項・コメント） | レビュー（この文書に沿っているか） |

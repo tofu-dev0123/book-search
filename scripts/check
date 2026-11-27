@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# book-search の検証。/implement が固定で実行する（issue-driven の約束）。
+#
+#   1. Python：ruff format --check・ruff check・pytest（ES が要るテストは除く。pyproject.toml の addopts）
+#   2. UI（ui/）：lint・format:check・typecheck・test・build
+#
+# 1つが失敗しても残りを流し、最後にまとめて失敗を返す。
+set -uo pipefail
+
+cd "$(dirname "$0")/.."
+failed=()
+
+run() {
+  local name=$1
+  shift
+  printf '\n== %s\n' "$name"
+  "$@" || failed+=("$name")
+}
+
+run "ruff format" uv run ruff format --check
+run "ruff check" uv run ruff check
+run "pytest" uv run pytest
+
+if [[ ! -d ui/node_modules ]]; then
+  printf '\n== UI\n  ui/node_modules がない。cd ui && npm ci を流すこと\n'
+  failed+=("UI")
+else
+  for script in lint format:check typecheck test build; do
+    run "ui: npm run $script" npm --prefix ui run --silent "$script"
+  done
+fi
+
+echo
+if ((${#failed[@]})); then
+  printf '失敗: %s\n' "${failed[@]}"
+  exit 1
+fi
+echo "すべて通った"
