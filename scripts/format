@@ -13,6 +13,11 @@
 # 型チェックは流さない（複数のファイルにまたがる変更の途中で、まだ直していないファイルのエラーが毎回返るため）。
 set -euo pipefail
 
+if (($# != 1)); then
+  echo "使い方: ./scripts/format <ファイル>"
+  exit 1
+fi
+
 cd "$(dirname "$0")/.."
 path=${1#./}
 [[ -f "$path" ]] || exit 0
